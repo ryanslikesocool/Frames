@@ -5,16 +5,22 @@ A set of Framer X-esque elements and tools for Unity 2018.3+.  Probably works on
 
 ## Elements
 ### Frame
-Does nothing at the moment other than allow for stack rearranging.
+Frames are pretty much mostly boxes that can be used as content for stacks.
+![Stack Inspector Preview](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/FrameInspectorPreview.png)
 
-**Frame Features included**
+**Frame Features Included**
+- Types of corners, such as Round and Smooth
+- Instant mesh recreation on all changes (except size changes)
+- Ability to change corner radius
+- Ability to have split corner radiuses
+- Ability to change level of detail
 - Creation menu
 
 ### Stack
 Basically just an easier-to-understand (and slightly dumbed down) version of Unity's linear Layout Group components.
 ![Stack Inspector Preview](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/StackInspectorPreview.png)
 
-**Stack Features included**
+**Stack Features Included**
 - Horizontal and vertical stacks
 - Types of spacing, such as Start, Center, End, Space Between, Space Around, and Even Spacing
 - Types of alignment, such as Left (Top), Center, and Right (Bottom)
@@ -26,7 +32,8 @@ Basically just an easier-to-understand (and slightly dumbed down) version of Uni
 #### More coming soon!
 
 ## Usage
-In the GameObject menu, there should be a new folder called "Framer".  Create a Stack and have fun.
+In the GameObject menu, there's a folder called "Framer".  Create an element and have fun!
 
 ## Credits
-ReorderableListTool.cs [Siyuan Wang](https://github.com/twsiyuan/unity-ReorderableListUtility)
+ReorderableListTool.cs: [Siyuan Wang](https://github.com/twsiyuan/unity-ReorderableListUtility)
+Triangulator.cs: [runevision](http://wiki.unity3d.com/index.php/Triangulator)

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Framer
 {
-    public class FrameMaker : MonoBehaviour
+    public class FrameMenu : MonoBehaviour
     {
         //Menu for new Frame
         [MenuItem("GameObject/Framer/Frame", false, 10)]
@@ -15,23 +15,7 @@ namespace Framer
             GameObject go = new GameObject("Frame");
             go.AddComponent(typeof(Frame));
 
-            //Add canvas if needed, otherwise parent to first canvas
-            if (FindObjectOfType<Canvas>() != null)
-            {
-                go.transform.parent = FindObjectOfType<Canvas>().transform;
-            }
-            else
-            {
-                GameObject canvas = new GameObject("Canvas");
-                canvas.AddComponent(typeof(Canvas));
-                canvas.AddComponent(typeof(CanvasScaler));
-                canvas.AddComponent(typeof(GraphicRaycaster));
-                go.transform.parent = canvas.transform;
-            }
-
-            // Register the creation in the undo system
-            Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
-            Selection.activeObject = go;
+            FinalizeCreation(go);
         }
 
         //Menu for new Stack
@@ -41,7 +25,12 @@ namespace Framer
             GameObject go = new GameObject("Stack");
             go.AddComponent(typeof(Stack));
 
-            //Add canvas if needed, otherwise parent to first canvas
+            FinalizeCreation(go);
+        }
+
+        static void FinalizeCreation(GameObject go)
+        {
+            //Parent to first canvas, otherwise create one and parent if needed
             if (FindObjectOfType<Canvas>() != null)
             {
                 go.transform.parent = FindObjectOfType<Canvas>().transform;
@@ -52,7 +41,9 @@ namespace Framer
                 canvas.AddComponent(typeof(Canvas));
                 canvas.AddComponent(typeof(CanvasScaler));
                 canvas.AddComponent(typeof(GraphicRaycaster));
-                go.transform.parent = canvas.transform;
+                canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+
+                go.transform.SetParent(canvas.transform);
             }
 
             // Register the creation in the undo system

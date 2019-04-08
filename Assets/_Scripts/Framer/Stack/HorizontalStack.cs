@@ -7,14 +7,14 @@ namespace Framer
 {
     public class HorizontalStack : IStackableObject
     {
+        public RectTransform bounds;
+        public List<RectTransform> contents;
+
         public float inputSpacing;
         public Vector2[] assignedSpacing;
 
         public StackDistribution distribution;
         public StackAlignment alignment;
-
-        public RectTransform bounds;
-        public List<RectTransform> contents;
 
         public Vector2[] padding;
 

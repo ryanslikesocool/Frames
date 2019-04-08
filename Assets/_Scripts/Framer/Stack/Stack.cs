@@ -12,16 +12,19 @@ namespace Framer
     [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent(typeof(CanvasRenderer))]
+    [RequireComponent(typeof(Frame))]
     public class Stack : MonoBehaviour
     {
         [HideInInspector]
-        public RectTransform rectTransform;
+        public RectTransform rectTransform = null;
         [HideInInspector]
-        public StackDirection direction;
+        public StackDirection direction = StackDirection.Horizontal;
         [HideInInspector]
-        public StackDistribution distribution;
+        public StackDistribution distribution = StackDistribution.SpaceEvenly;
         [HideInInspector]
-        public StackAlignment alignment;
+        public StackAlignment alignment = StackAlignment.Center;
+        [HideInInspector]
+        public float spacing = 0;
         [HideInInspector]
         public Vector2[] padding = new Vector2[2];
         [HideInInspector]
@@ -29,11 +32,7 @@ namespace Framer
 
         public IStackableObject stackInstance;
 
-        [HideInInspector]
-        public float spacing = 0,
-                     startDistance = 0;
-
-        void Start()
+        void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
         }
@@ -41,7 +40,14 @@ namespace Framer
         //Probably not necessary but you never know
         void OnEnable()
         {
-            stackInstance = new HorizontalStack(rectTransform, contents, distribution, alignment, spacing, padding);
+            if (direction == StackDirection.Horizontal)
+            {
+                stackInstance = new HorizontalStack(rectTransform, contents, distribution, alignment, spacing, padding);
+            }
+            else
+            {
+                stackInstance = new VerticalStack(rectTransform, contents, distribution, alignment, spacing, padding);
+            }
         }
 
         //Resets and gathers children on top level

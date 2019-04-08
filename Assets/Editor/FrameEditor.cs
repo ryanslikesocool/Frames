@@ -7,15 +7,16 @@ using UnityEditorInternal;
 
 namespace Framer
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(Frame))]
     public class FrameEditor : Editor
     {
-        private Frame element;
+        private Frame frame;
 
         //Basic editor stuff
         void OnEnable()
         {
-            element = (Frame)target;
+            frame = (Frame)target;
         }
 
         void OnSceneGUI()
@@ -23,11 +24,84 @@ namespace Framer
             //Drag and drop stuff
             if (Event.current.type == EventType.MouseUp)
             {
-                if (element.GetComponentInParent<Stack>() != null)
+                if (frame.GetComponentInParent<Stack>() != null)
                 {
-                    element.GetComponentInParent<Stack>().SortStack();
-                    element.GetComponentInParent<Stack>().ForceStack();
+                    Stack stack = frame.GetComponentInParent<Stack>();
+                    stack.SortStack();
+                    stack.ForceStack();
                 }
+            }
+        }
+
+        public override void OnInspectorGUI()
+        {
+            FrameCornerType direction = (FrameCornerType)EditorGUILayout.EnumPopup("Corner Type", frame.cornerType);
+            if (frame.cornerType != direction)
+            {
+                frame.cornerType = direction;
+            }
+
+            EditorGUILayout.Space();
+
+            //This toggle allows for easy uniform corner radii
+            if (frame.splitCorners = EditorGUILayout.Toggle("Split Corners", frame.splitCorners))
+            {
+                EditorGUILayout.Space();
+
+                EditorGUILayout.LabelField("Corner Radii", EditorStyles.boldLabel);
+                if (frame.cornerRadii.Length != 4)
+                {
+                    frame.cornerRadii = new float[4];
+                }
+                frame.cornerRadii[0] = EditorGUILayout.Slider("Top Right", frame.cornerRadii[0], 0, Mathf.Min(
+                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[1],
+                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[3])
+                                                                                                    );
+                frame.cornerRadii[1] = EditorGUILayout.Slider("Top Left", frame.cornerRadii[1], 0, Mathf.Min(
+                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[0],
+                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[2])
+                                                                                                    );
+                frame.cornerRadii[2] = EditorGUILayout.Slider("Bottom Left", frame.cornerRadii[2], 0, Mathf.Min(
+                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[3],
+                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[1])
+                                                                                                    );
+                frame.cornerRadii[3] = EditorGUILayout.Slider("Bottom Right", frame.cornerRadii[3], 0, Mathf.Min(
+                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[2],
+                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[0])
+                                                                                                    );
+            }
+            else
+            {
+                frame.cornerRadii[0] = EditorGUILayout.Slider("Uniform Corner Radius", frame.cornerRadii[0], 0, Mathf.Min(
+                                                                                                                    frame.rectTransform.sizeDelta.x / 2,
+                                                                                                                    frame.rectTransform.sizeDelta.y / 2)
+                                                                                                                );
+
+                for (int i = 1; i < 4; i++)
+                {
+                    frame.cornerRadii[i] = frame.cornerRadii[0];
+                }
+            }
+
+            EditorGUILayout.Space();
+
+            //You can probably increase it, but 32 should be a high enough max for it to still look good
+            frame.levelOfDetail = EditorGUILayout.IntSlider("Vertices Per Corner", frame.levelOfDetail, 4, 32);
+
+            //No clue what this does
+            serializedObject.Update();
+            serializedObject.ApplyModifiedProperties();
+
+            if (GUI.changed)
+            {
+                frame.CreateFrameMesh();
+            }
+
+            EditorGUILayout.Space();
+
+            if (GUILayout.Button("Force Create Frame Mesh"))
+            {
+                frame.CreateFrameMesh();
             }
         }
     }
