@@ -2,13 +2,11 @@
 # Unity-UI-Layout
 A set of Framer X-esque elements and tools for Unity 2018.3+.  Probably works on some earlier versions but I haven't tested it and don't plan to.
 
-
 ## Elements
 ### Frame
 Does nothing at the moment other than allow for stack rearranging.
 **Frame Features included**
 - Creation menu
-
 
 ### Stack
 Basically just an easier-to-understand (and slightly dumbed down) version of Unity's linear Layout Group components.
@@ -21,3 +19,11 @@ Basically just an easier-to-understand (and slightly dumbed down) version of Uni
 - Creation menu
 - Ability to reorder with inspector or drag and drop
 - Custom inspector with likely everything you'll need to use Stacks
+
+#### More coming soon!
+
+## Usage
+In the GameObject menu, there should be a new folder called "Framer".  Create a Stack and have fun.
+
+## Credits
+ReorderableListTool.cs [Siyuan Wang](https://github.com/twsiyuan/unity-ReorderableListUtility)

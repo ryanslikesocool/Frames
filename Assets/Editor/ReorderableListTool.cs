@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿//  
+// Copyright (c) 2016 Siyuan Wang.
+// Licensed under the Apache License  Version 2.0. See LICENSE file in the project root for full license information.  
+//
+
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
