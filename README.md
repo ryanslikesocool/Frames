@@ -10,11 +10,13 @@ Frames are pretty much mostly boxes that can be used as content for stacks.
 
 **Frame Features Included**
 - Types of corners, such as Round and Smooth
-- Instant mesh recreation on all changes (except size changes)
+- Instant mesh recreation on all changes except size changes
 - Ability to change corner radius
 - Ability to have split corner radiuses
 - Ability to change level of detail
 - Creation menu
+- Custom inspector
+- Superellipses!
 
 ### Stack
 Basically just an easier-to-understand (and slightly dumbed down) version of Unity's linear Layout Group components.
@@ -25,9 +27,9 @@ Basically just an easier-to-understand (and slightly dumbed down) version of Uni
 - Types of spacing, such as Start, Center, End, Space Between, Space Around, and Even Spacing
 - Types of alignment, such as Left (Top), Center, and Right (Bottom)
 - Padding
-- Creation menu
 - Ability to reorder with inspector or drag and drop
-- Custom inspector with likely everything you'll need to use Stacks
+- Creation menu
+- Custom inspector
 
 #### More coming soon!
 
