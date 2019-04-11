@@ -5,9 +5,11 @@ using UnityEngine.UI;
 using UnityEditor;
 using UnityEditorInternal;
 using System;
+using UnityEditor.SceneManagement;
 
 namespace Framer
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(Stack))]
     public class StackBaseEditor : Editor
     {
@@ -132,6 +134,12 @@ namespace Framer
             //Learned about this recently.  It enables the ability to undo stuff!
             //It doesn't always work...
             Undo.RecordObject(this, "Stack Change");
+
+            if (GUI.changed && !EditorApplication.isPlaying)
+            {
+                EditorSceneManager.MarkSceneDirty(stack.gameObject.scene);
+                EditorUtility.SetDirty(stack);
+            }
         }
     }
 }

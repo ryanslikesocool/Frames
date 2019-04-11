@@ -10,8 +10,6 @@ namespace Framer
 {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(RectTransform))]
-    [RequireComponent(typeof(CanvasRenderer))]
     [RequireComponent(typeof(Frame))]
     public class Stack : MonoBehaviour
     {

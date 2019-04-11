@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Framer
 {
-    public class FrameMenu : MonoBehaviour
+    public class FramerMenu : MonoBehaviour
     {
         //Menu for new Frame
         [MenuItem("GameObject/Framer/Frame", false, 10)]
@@ -24,6 +24,16 @@ namespace Framer
         {
             GameObject go = new GameObject("Stack");
             go.AddComponent(typeof(Stack));
+
+            FinalizeCreation(go);
+        }
+
+        //Menu for new Page
+        [MenuItem("GameObject/Framer/Page", false, 10)]
+        static void CreatePage(MenuCommand menuCommand)
+        {
+            GameObject go = new GameObject("Page");
+            go.AddComponent(typeof(Page));
 
             FinalizeCreation(go);
         }

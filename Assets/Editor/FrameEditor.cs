@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using UnityEditorInternal;
+using UnityEditor.SceneManagement;
 
 namespace Framer
 {
@@ -92,16 +93,20 @@ namespace Framer
             serializedObject.Update();
             serializedObject.ApplyModifiedProperties();
 
-            if (GUI.changed)
-            {
-                frame.CreateFrameMesh();
-            }
-
             EditorGUILayout.Space();
 
             if (GUILayout.Button("Force Create Frame Mesh"))
             {
                 frame.CreateFrameMesh();
+            }
+
+            Undo.RecordObject(this, "Frame Change");
+
+            if (GUI.changed && !EditorApplication.isPlaying)
+            {
+                frame.CreateFrameMesh();
+                EditorSceneManager.MarkSceneDirty(frame.gameObject.scene);
+                EditorUtility.SetDirty(frame);
             }
         }
     }

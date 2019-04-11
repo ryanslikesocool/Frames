@@ -9,7 +9,6 @@ namespace Framer
 {
     [ExecuteInEditMode]
     [DisallowMultipleComponent]
-    [CanEditMultipleObjects]
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent(typeof(CanvasRenderer))]
     [RequireComponent(typeof(MeshFilter))]
@@ -38,6 +37,14 @@ namespace Framer
         void OnEnable()
         {
             CreateFrameMesh();
+        }
+
+        void Update()
+        {
+            if (transform.hasChanged && !Application.isPlaying)
+            {
+                CreateFrameMesh();
+            }
         }
 
         public void CreateFrameMesh()
