@@ -155,10 +155,9 @@ namespace Framer
             }
             EditorGUILayout.EndHorizontal();
 
-            Undo.RecordObject(this, "Page Change");
-
             if (GUI.changed && !EditorApplication.isPlaying)
             {
+                Undo.RecordObject(this, "Page Change");
                 page.LineUp();
                 page.SetPage(page.targetIndex);
                 EditorSceneManager.MarkSceneDirty(page.gameObject.scene);

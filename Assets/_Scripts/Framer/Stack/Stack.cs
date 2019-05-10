@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-using UnityEditorInternal;
 using System;
 
 namespace Framer
 {
     [ExecuteInEditMode]
-    [DisallowMultipleComponent]
     [RequireComponent(typeof(Frame))]
     public class Stack : MonoBehaviour
     {

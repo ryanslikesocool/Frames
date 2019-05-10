@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-using UnityEditorInternal;
 
 namespace Framer
 {
     [ExecuteInEditMode]
-    [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]
     [RequireComponent(typeof(CanvasRenderer))]
     [RequireComponent(typeof(MeshFilter))]
@@ -18,11 +16,13 @@ namespace Framer
         [HideInInspector]
         public RectTransform rectTransform = null;
         [HideInInspector]
+        public Color32 frameColor = Color.white;
+        [HideInInspector]
         public FrameCornerType cornerType = FrameCornerType.Round;
         [HideInInspector]
         public float[] cornerRadii = new float[4] { 20, 20, 20, 20 };
         [HideInInspector]
-        public int levelOfDetail = 32;
+        public int levelOfDetail = 8;
         [HideInInspector]
         public bool splitCorners = false;
 
@@ -58,7 +58,20 @@ namespace Framer
                 frameInstance = new SmoothFrame(rectTransform, cornerRadii, levelOfDetail);
             }
 
-            GetComponent<MeshFilter>().mesh = frameInstance.CreateMesh();
+            GetComponent<MeshFilter>().sharedMesh = frameInstance.CreateMesh();
+            UpdateFrameColor(GetComponent<MeshFilter>().sharedMesh);
+        }
+
+        void UpdateFrameColor(Mesh mesh)
+        {
+            //Making an entirely new color array is necessary since Mesh.colors and Mesh.colors32 are immutable
+            Color32[] vertexColors = new Color32[mesh.vertexCount];
+            for (int i = 0; i < vertexColors.Length; i++)
+            {
+                vertexColors[i] = frameColor;
+            }
+
+            mesh.colors32 = vertexColors;
         }
     }
 }

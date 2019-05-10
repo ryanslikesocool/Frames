@@ -10,14 +10,12 @@ namespace Framer
         public RectTransform bounds;
 
         public float[] cornerRadii;
-
         public int levelOfDetail;
 
         public List<Vector2> meshPoints = new List<Vector2>();
 
 
         //Frame corners are created similar to progressing along a unit circle.
-        //It starts at Vector2.left and goes counter clockwise
         public RoundFrame(RectTransform bounds, float[] cornerRadii, int levelOfDetail)
         {
             this.bounds = bounds;
@@ -91,7 +89,7 @@ namespace Framer
 
             Vector2[] vertices2D = meshPoints.ToArray();
 
-            // Use Triangulator to get indices for creating triangles
+            //Use Triangulator to get indices for creating triangles
             Triangulator tr = new Triangulator(vertices2D);
             int[] indices = tr.Triangulate();
 
@@ -101,14 +99,14 @@ namespace Framer
                 vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
             }
 
-            // Create the mesh
+            //Create the mesh
             Mesh mesh = new Mesh();
             mesh.vertices = vertices;
             mesh.triangles = indices;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
 
-            // Set up game object with mesh;
+            //Set up game object with mesh
             return mesh;
         }
     }

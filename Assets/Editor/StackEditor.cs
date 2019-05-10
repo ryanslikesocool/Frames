@@ -131,12 +131,9 @@ namespace Framer
             }
             GUILayout.EndHorizontal();
 
-            //Learned about this recently.  It enables the ability to undo stuff!
-            //It doesn't always work...
-            Undo.RecordObject(this, "Stack Change");
-
             if (GUI.changed && !EditorApplication.isPlaying)
             {
+                Undo.RecordObject(this, "Stack Change");
                 EditorSceneManager.MarkSceneDirty(stack.gameObject.scene);
                 EditorUtility.SetDirty(stack);
             }

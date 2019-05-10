@@ -36,6 +36,11 @@ namespace Framer
 
         public override void OnInspectorGUI()
         {
+            //Can't believe I didn't add this sooner [insert facepalm emoji]
+            frame.frameColor = EditorGUILayout.ColorField("Frame Color", frame.frameColor);
+
+            EditorGUILayout.Space();
+
             FrameCornerType direction = (FrameCornerType)EditorGUILayout.EnumPopup("Corner Type", frame.cornerType);
             if (frame.cornerType != direction)
             {
@@ -84,9 +89,7 @@ namespace Framer
                 }
             }
 
-            EditorGUILayout.Space();
-
-            //You can probably increase it, but 32 should be a high enough max for it to still look good
+            //You can probably increase it, but 32 should be a high enough max for it to still look good.  Even 4 looks good if the frame is small enough
             frame.levelOfDetail = EditorGUILayout.IntSlider("Vertices Per Corner", frame.levelOfDetail, 4, 32);
 
             //No clue what this does
@@ -100,10 +103,9 @@ namespace Framer
                 frame.CreateFrameMesh();
             }
 
-            Undo.RecordObject(this, "Frame Change");
-
             if (GUI.changed && !EditorApplication.isPlaying)
             {
+                Undo.RecordObject(this, "Frame Change");
                 frame.CreateFrameMesh();
                 EditorSceneManager.MarkSceneDirty(frame.gameObject.scene);
                 EditorUtility.SetDirty(frame);

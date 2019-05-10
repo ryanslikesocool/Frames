@@ -7,7 +7,6 @@ using UnityEditor;
 namespace Framer
 {
     [ExecuteInEditMode]
-    [DisallowMultipleComponent]
     [RequireComponent(typeof(Frame))]
     public class Page : MonoBehaviour
     {
@@ -53,7 +52,7 @@ namespace Framer
 
         void Update()
         {
-            if (currentIndex != targetIndex && EditorApplication.isPlaying)
+            if (currentIndex != targetIndex && Application.isPlaying)
             {
                 animationTimeElapsed += Time.deltaTime;
                 ChangePage(targetIndex, animationTimeElapsed, timeTakenDuringAnimation);
