@@ -46,12 +46,16 @@ namespace Framer
             if (page.alignment != alignment)
             {
                 page.alignment = alignment;
+                page.LineUp();
+                page.ChangeDirection();
             }
 
             PageTransition transition = (PageTransition)EditorGUILayout.EnumPopup("Transition", page.transition);
             if (page.transition != transition)
             {
                 page.transition = transition;
+                page.LineUp();
+                page.ChangeTransitionType();
             }
 
             EditorGUILayout.Space();
