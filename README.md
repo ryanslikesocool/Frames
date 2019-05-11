@@ -1,7 +1,7 @@
 ![Stack Demo](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/StackPreview.gif)
 
 # Unity-UI-Layout
-A set of Framer X-esque elements and tools for Unity 2018.3+.  
+A set of Framer X-esque elements and tools for Unity 2019.1+.  
 
 ## Frame
 Frames are pretty much mostly boxes that can be used as content for stacks.
@@ -14,7 +14,8 @@ Frames are pretty much mostly boxes that can be used as content for stacks.
 - Ability to change level of detail  
 - Creation menu  
 - Custom inspector  
-- Superellipses!  
+- Superellipses!
+- Vertex coloring (less materials)
 
 ## Stack
 Basically just an easier-to-understand (and slightly dumbed down) version of Unity's linear Layout Group components.
