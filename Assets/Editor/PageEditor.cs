@@ -15,70 +15,67 @@ namespace Framer
         private Page page;
         private ReorderableList content;
 
-        //Basic editor stuff
+        private SerializedProperty direction;
+        private SerializedProperty alignment;
+        private SerializedProperty transition;
+        private SerializedProperty targetIndex;
+        private SerializedProperty currentIndex;
+        private SerializedProperty timeTakenDuringAnimation;
+        private SerializedProperty spacing;
+        private SerializedProperty padding;
+
         void OnEnable()
         {
             page = (Page)target;
+
+            direction = serializedObject.FindProperty("direction");
+            alignment = serializedObject.FindProperty("alignment");
+            transition = serializedObject.FindProperty("transition");
+            targetIndex = serializedObject.FindProperty("targetIndex");
+            currentIndex = serializedObject.FindProperty("currentIndex");
+            timeTakenDuringAnimation = serializedObject.FindProperty("timeTakenDuringAnimation");
+            spacing = serializedObject.FindProperty("spacing");
+            padding = serializedObject.FindProperty("padding");
 
             content = new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true);
             content.drawHeaderCallback = rect =>
             {
                 EditorGUI.LabelField(rect, "Contents", EditorStyles.boldLabel);
             };
-            content.drawElementCallback =
-                (Rect rect, int index, bool isActive, bool isFocused) =>
-                {
-                    var element = content.serializedProperty.GetArrayElementAtIndex(index);
-                    EditorGUI.ObjectField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, GUIContent.none);
-                };
+            content.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                var element = content.serializedProperty.GetArrayElementAtIndex(index);
+                EditorGUI.ObjectField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, GUIContent.none);
+            };
         }
 
         public override void OnInspectorGUI()
         {
-            PageDirection direction = (PageDirection)EditorGUILayout.EnumPopup("Direction", page.direction);
-            if (page.direction != direction)
-            {
-                page.direction = direction;
-                page.ChangeDirection();
-            }
+            serializedObject.Update();
 
-            PageAlignment alignment = (PageAlignment)EditorGUILayout.EnumPopup("Distribution", page.alignment);
-            if (page.alignment != alignment)
-            {
-                page.alignment = alignment;
-                page.LineUp();
-                page.ChangeDirection();
-            }
+            direction.enumValueIndex = (int)(PageDirection)EditorGUILayout.EnumPopup("Direction", (PageDirection)direction.enumValueIndex);
 
-            PageTransition transition = (PageTransition)EditorGUILayout.EnumPopup("Transition", page.transition);
-            if (page.transition != transition)
-            {
-                page.transition = transition;
-                page.LineUp();
-                page.ChangeTransitionType();
-            }
+            alignment.enumValueIndex = (int)(PageAlignment)EditorGUILayout.EnumPopup("Alignment", (PageAlignment)alignment.enumValueIndex);
+
+            transition.enumValueIndex = (int)(PageTransition)EditorGUILayout.EnumPopup("Transition", (PageTransition)transition.enumValueIndex);
 
             EditorGUILayout.Space();
 
             EditorGUILayout.BeginHorizontal();
-            page.targetIndex = EditorGUILayout.IntField("Target Index", page.targetIndex);
-            if (page.targetIndex < 0 && page.targetIndex < page.contents.Count)
+            targetIndex.intValue = EditorGUILayout.IntField("Target Index", targetIndex.intValue);
+            if (targetIndex.intValue < 0 && targetIndex.intValue < page.contents.Count)
             {
-                page.targetIndex = 0;
+                targetIndex.intValue = 0;
             }
-            else if (page.targetIndex >= page.contents.Count)
+            else if (targetIndex.intValue >= page.contents.Count)
             {
-                page.targetIndex = page.contents.Count - 1;
+                targetIndex.intValue = page.contents.Count - 1;
             }
             if (GUILayout.Button("-"))
             {
-                if (page.targetIndex > 0)
+                if (targetIndex.intValue > 0)
                 {
-                    page.targetIndex--;
-                    if (!Application.isPlaying)
-                    {
-                        page.SetPage(page.currentIndex, page.targetIndex);
-                    }
+                    targetIndex.intValue--;
                 }
                 else
                 {
@@ -87,13 +84,9 @@ namespace Framer
             }
             if (GUILayout.Button("+"))
             {
-                if (page.targetIndex < page.contents.Count - 1)
+                if (targetIndex.intValue < page.contents.Count - 1)
                 {
-                    page.targetIndex++;
-                    if (!Application.isPlaying)
-                    {
-                        page.SetPage(page.currentIndex, page.targetIndex);
-                    }
+                    targetIndex.intValue++;
                 }
                 else
                 {
@@ -102,27 +95,24 @@ namespace Framer
             }
             EditorGUILayout.EndHorizontal();
 
-            page.timeTakenDuringAnimation = EditorGUILayout.FloatField("Animation Length", page.timeTakenDuringAnimation);
+            timeTakenDuringAnimation.floatValue = EditorGUILayout.FloatField("Animation Length", timeTakenDuringAnimation.floatValue);
 
             EditorGUILayout.Space();
 
-            page.spacing = EditorGUILayout.FloatField("Spacing", page.spacing);
+            spacing.floatValue = EditorGUILayout.FloatField("Spacing", spacing.floatValue);
 
             EditorGUILayout.Space();
 
-            if (page.padding.Length != 2)
+            if (padding.arraySize != 2)
             {
-                page.padding = new Vector2[2];
+                padding.arraySize = 2;
             }
-            page.padding[0] = EditorGUILayout.Vector2Field("Padding Min", page.padding[0]);
-            page.padding[1] = EditorGUILayout.Vector2Field("Padding Max", page.padding[1]);
+            padding.GetArrayElementAtIndex(0).vector2Value = EditorGUILayout.Vector2Field("Padding Min", padding.GetArrayElementAtIndex(0).vector2Value);
+            padding.GetArrayElementAtIndex(1).vector2Value = EditorGUILayout.Vector2Field("Padding Max", padding.GetArrayElementAtIndex(1).vector2Value);
 
             EditorGUILayout.Space();
 
-            //No clue what this does
-            serializedObject.Update();
             content.DoLayoutList();
-            serializedObject.ApplyModifiedProperties();
 
             //Disgusting removal when clicking the minus button on the reorderable list
             List<RectTransform> toRemove = new List<RectTransform>();
@@ -144,7 +134,7 @@ namespace Framer
                 if (!EditorApplication.isPlaying)
                 {
                     page.LineUp();
-                    page.SetPage(page.currentIndex, page.targetIndex);
+                    page.SetPage(currentIndex.intValue, targetIndex.intValue);
                 }
             }
 
@@ -161,10 +151,11 @@ namespace Framer
 
             if (GUI.changed && !EditorApplication.isPlaying)
             {
-                Undo.RecordObject(this, "Page Change");
+                serializedObject.ApplyModifiedProperties();
+                page.ChangeDirection();
+                page.ChangeTransitionType();
                 page.LineUp();
-                page.SetPage(page.currentIndex, page.targetIndex);
-                EditorSceneManager.MarkSceneDirty(page.gameObject.scene);
+                page.SetPage(currentIndex.intValue, targetIndex.intValue);
                 EditorUtility.SetDirty(page);
             }
         }

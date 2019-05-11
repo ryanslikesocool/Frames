@@ -14,6 +14,13 @@ namespace Framer
     public class StackBaseEditor : Editor
     {
         private Stack stack;
+
+        private SerializedProperty direction;
+        private SerializedProperty distribution;
+        private SerializedProperty alignment;
+        private SerializedProperty padding;
+        private SerializedProperty spacing;
+
         private ReorderableList content;
 
         //Just your basic custom inspector enable stuff
@@ -21,7 +28,12 @@ namespace Framer
         {
             stack = (Stack)target;
 
-            //I think (???) this is for the reorderable list.  I don't remember
+            direction = serializedObject.FindProperty("direction");
+            distribution = serializedObject.FindProperty("distribution");
+            alignment = serializedObject.FindProperty("alignment");
+            padding = serializedObject.FindProperty("padding");
+            spacing = serializedObject.FindProperty("spacing");
+
             content = new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true);
             content.drawHeaderCallback = rect =>
             {
@@ -38,49 +50,36 @@ namespace Framer
 
         public override void OnInspectorGUI()
         {
-            StackDirection direction = (StackDirection)EditorGUILayout.EnumPopup("Direction", stack.direction);
-            if (stack.direction != direction)
-            {
-                stack.direction = direction;
-            }
+            serializedObject.Update();
 
-            StackDistribution distribution = (StackDistribution)EditorGUILayout.EnumPopup("Distribution", stack.distribution);
-            if (stack.distribution != distribution)
-            {
-                stack.distribution = distribution;
-            }
+            direction.enumValueIndex = (int)(StackDirection)EditorGUILayout.EnumPopup("Direction", (StackDirection)direction.enumValueIndex);
 
-            StackAlignment alignment = (StackAlignment)EditorGUILayout.EnumPopup("Alignment", stack.alignment);
-            if (stack.alignment != alignment)
-            {
-                stack.alignment = alignment;
-            }
+            distribution.enumValueIndex = (int)(StackDistribution)EditorGUILayout.EnumPopup("Distribution", (StackDistribution)distribution.enumValueIndex);
+
+            alignment.enumValueIndex = (int)(StackAlignment)EditorGUILayout.EnumPopup("Alignment", (StackAlignment)alignment.enumValueIndex);
 
             EditorGUILayout.Space();
 
-            if (stack.padding.Length != 2)
+            if (padding.arraySize != 2)
             {
-                stack.padding = new Vector2[2];
+                padding.arraySize = 2;
             }
-            stack.padding[0] = EditorGUILayout.Vector2Field("Padding Min", stack.padding[0]);
-            stack.padding[1] = EditorGUILayout.Vector2Field("Padding Max", stack.padding[1]);
+            padding.GetArrayElementAtIndex(0).vector2Value = EditorGUILayout.Vector2Field("Padding Min", padding.GetArrayElementAtIndex(0).vector2Value);
+            padding.GetArrayElementAtIndex(1).vector2Value = EditorGUILayout.Vector2Field("Padding Max", padding.GetArrayElementAtIndex(1).vector2Value);
 
             EditorGUILayout.Space();
 
             //Enables spacing for distributions without auto-spacing
-            switch (stack.distribution)
+            switch ((StackDistribution)distribution.enumValueIndex)
             {
                 case StackDistribution.Start:
                 case StackDistribution.End:
                 case StackDistribution.Center:
-                    stack.spacing = EditorGUILayout.FloatField("Spacing", stack.spacing);
+                    spacing.floatValue = EditorGUILayout.FloatField("Spacing", spacing.floatValue);
                     break;
             }
 
-            //No clue what this does
-            serializedObject.Update();
             content.DoLayoutList();
-            serializedObject.ApplyModifiedProperties();
 
             //For some reason, the minus button on the reorderable list in the editor
             //doens't remove the entry in the list.  This fixes that
@@ -111,11 +110,18 @@ namespace Framer
                 stack.ForceStack();
             }
 
+            if (GUI.changed && !EditorApplication.isPlaying)
+            {
+                serializedObject.ApplyModifiedProperties();
+                stack.ForceStack();
+                EditorUtility.SetDirty(stack);
+            }
+
             //Fixes stuff when stuff goes wrong.  Shouldn't need to be used *too* often (hopefully)
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Force Restack"))
             {
-                if (stack.direction == StackDirection.Horizontal)
+                if ((StackDirection)direction.enumValueIndex == StackDirection.Horizontal)
                 {
                     stack.stackInstance = new HorizontalStack(stack.rectTransform, stack.contents, stack.distribution, stack.alignment, stack.spacing, stack.padding);
                 }
@@ -130,13 +136,6 @@ namespace Framer
                 stack.ResetChildren();
             }
             GUILayout.EndHorizontal();
-
-            if (GUI.changed && !EditorApplication.isPlaying)
-            {
-                Undo.RecordObject(this, "Stack Change");
-                EditorSceneManager.MarkSceneDirty(stack.gameObject.scene);
-                EditorUtility.SetDirty(stack);
-            }
         }
     }
 }
