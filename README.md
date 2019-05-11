@@ -34,7 +34,7 @@ Pagination!  It's super easy to make your own transitions.
 **Page Features Included**  
 - Horizontal and vertical pages  
 - 3 types of alignment (Left (Top), Center, and Right (Bottom))  
-- One transition type (Linear, Pile) (more coming soon!)  
+- Two transition types (Linear, Pile) (more coming soon!)  
 - Transition length  
 - Spacing between pages  
 - Change initial page (live preview) with the inspector  
