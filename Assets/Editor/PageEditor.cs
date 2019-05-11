@@ -73,7 +73,7 @@ namespace Framer
                     page.targetIndex--;
                     if (!Application.isPlaying)
                     {
-                        page.SetPage(page.targetIndex);
+                        page.SetPage(page.currentIndex, page.targetIndex);
                     }
                 }
                 else
@@ -88,7 +88,7 @@ namespace Framer
                     page.targetIndex++;
                     if (!Application.isPlaying)
                     {
-                        page.SetPage(page.targetIndex);
+                        page.SetPage(page.currentIndex, page.targetIndex);
                     }
                 }
                 else
@@ -140,7 +140,7 @@ namespace Framer
                 if (!EditorApplication.isPlaying)
                 {
                     page.LineUp();
-                    page.SetPage(page.targetIndex);
+                    page.SetPage(page.currentIndex, page.targetIndex);
                 }
             }
 
@@ -159,7 +159,7 @@ namespace Framer
             {
                 Undo.RecordObject(this, "Page Change");
                 page.LineUp();
-                page.SetPage(page.targetIndex);
+                page.SetPage(page.currentIndex, page.targetIndex);
                 EditorSceneManager.MarkSceneDirty(page.gameObject.scene);
                 EditorUtility.SetDirty(page);
             }

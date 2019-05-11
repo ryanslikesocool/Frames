@@ -16,11 +16,12 @@
     public enum PageTransition
     {
         Linear,
+        Pile,
 
         ///Haven't Implemented the rest of these yet
         //Coverflow,
         //Cube,
         //Wheel,
-        //Pile
+        //Path
     }
 }

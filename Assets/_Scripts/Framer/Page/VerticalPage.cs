@@ -12,19 +12,22 @@ namespace Framer
         public PageAlignment alignment;
         public PageTransition transition;
 
-        public Vector2[] originalPositions;
-        public Vector2[] assignedPositions;
+        public Vector3[] originalPositions,
+                         assignedPositions;
         public Vector2[] padding;
+
+        public float spacing;
 
         public IPageableTransition pageTransition;
 
-        public VerticalPage(RectTransform bounds, List<RectTransform> contents, PageAlignment alignment, PageTransition transition, Vector2[] padding)
+        public VerticalPage(RectTransform bounds, List<RectTransform> contents, PageAlignment alignment, PageTransition transition, Vector2[] padding, float spacing)
         {
             this.bounds = bounds;
             this.contents = contents;
             this.alignment = alignment;
             this.padding = padding;
             this.transition = transition;
+            this.spacing = spacing;
 
             ChangeTransition(transition);
         }
@@ -51,7 +54,7 @@ namespace Framer
 
         public void SetAssignedPositions()
         {
-            assignedPositions = new Vector2[contents.Count];
+            assignedPositions = new Vector3[contents.Count];
             for (int i = 0; i < contents.Count; i++)
             {
                 assignedPositions[i] = contents[i].localPosition;
@@ -65,21 +68,16 @@ namespace Framer
                 case PageTransition.Linear:
                     pageTransition = new PageTransitionLinear(contents, this);
                     break;
+                case PageTransition.Pile:
+                    pageTransition = new PageTransitionPile(contents, this);
+                    break;
             }
         }
 
         public void LineUp(float spacing)
         {
-            assignedPositions = new Vector2[contents.Count];
-            originalPositions = new Vector2[contents.Count];
-
-            float spaceUsed = bounds.sizeDelta.y / 2f - padding[1].y;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedPositions[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
-
-                spaceUsed -= spacing + contents[i].sizeDelta.y;
-            }
+            assignedPositions = pageTransition.LineUpVertical(bounds, padding, spacing);
+            originalPositions = new Vector3[contents.Count];
 
             switch (alignment)
             {
@@ -101,17 +99,17 @@ namespace Framer
             }
         }
 
-        public void SetPage(int target)
+        public void SetPage(int initial, int target)
         {
-            pageTransition.ChangePageVertical(target, 1, 1);
+            pageTransition.ChangePageVertical(initial, target, 1, 1, spacing);
             SetAssignedPositions();
         }
 
-        public void TransitionPage(int target, float time, float duration)
+        public void TransitionPage(int initial, int target, float time, float duration)
         {
             float clampedTime = Mathf.Clamp(time, 0, duration);
 
-            pageTransition.ChangePageVertical(target, clampedTime, duration);
+            pageTransition.ChangePageVertical(initial, target, clampedTime, duration, spacing);
         }
     }
 }

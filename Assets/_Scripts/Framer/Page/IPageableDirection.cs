@@ -24,11 +24,11 @@ namespace Framer
         ///<summary>
         ///Immediately snaps pages to requested index
         ///</summary>
-        void SetPage(int target);
+        void SetPage(int initial, int target);
 
         ///<summary>
         ///Smoothly transitions page to requested index
         ///</summary>
-        void TransitionPage(int target, float time, float duration);
+        void TransitionPage(int initial, int target, float time, float duration);
     }
 }

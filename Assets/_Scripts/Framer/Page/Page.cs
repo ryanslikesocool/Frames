@@ -23,17 +23,14 @@ namespace Framer
         [HideInInspector]
         public float spacing = 20;
         [HideInInspector]
-        public Vector2[] padding = new Vector2[2];
+        public Vector2[] padding = new Vector2[2],
+                         assignedPositions = null;
         [HideInInspector]
-        public int currentIndex = 0;
+        public int currentIndex = 0,
+                   targetIndex = 0;
         [HideInInspector]
-        public int targetIndex = 0;
-        [HideInInspector]
-        public float timeTakenDuringAnimation = 0.375f;
-        [HideInInspector]
-        public float animationTimeElapsed = 0;
-        [HideInInspector]
-        public Vector2[] assignedPositions = null;
+        public float timeTakenDuringAnimation = 0.375f,
+                     animationTimeElapsed = 0;
 
         public IPageableDirection pageInstance;
 
@@ -73,11 +70,11 @@ namespace Framer
         {
             if (direction == PageDirection.Horizontal)
             {
-                pageInstance = new HorizontalPage(rectTransform, contents, alignment, transition, padding);
+                pageInstance = new HorizontalPage(rectTransform, contents, alignment, transition, padding, spacing);
             }
             else
             {
-                pageInstance = new VerticalPage(rectTransform, contents, alignment, transition, padding);
+                pageInstance = new VerticalPage(rectTransform, contents, alignment, transition, padding, spacing);
             }
         }
 
@@ -95,7 +92,7 @@ namespace Framer
         {
             if (target >= 0 && target < contents.Count)
             {
-                pageInstance.TransitionPage(target, time, duration);
+                pageInstance.TransitionPage(currentIndex, target, time, duration);
 
                 if (animationTimeElapsed >= duration)
                 {
@@ -122,7 +119,7 @@ namespace Framer
             }
         }
 
-        public void SetPage(int target)
+        public void SetPage(int initial, int target)
         {
             if (target < 0 && target < contents.Count)
             {
@@ -139,7 +136,7 @@ namespace Framer
 
             currentIndex = target;
 
-            pageInstance.SetPage(target);
+            pageInstance.SetPage(initial, target);
         }
     }
 }
