@@ -60,27 +60,27 @@ namespace Framer
                     frame.cornerRadii = new float[4];
                 }
                 frame.cornerRadii[0] = EditorGUILayout.Slider("Top Right", frame.cornerRadii[0], 0, Mathf.Min(
-                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[1],
-                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[3])
+                                                                                                        frame.rectTransform.rect.width - frame.cornerRadii[1],
+                                                                                                        frame.rectTransform.rect.height - frame.cornerRadii[3])
                                                                                                     );
                 frame.cornerRadii[1] = EditorGUILayout.Slider("Top Left", frame.cornerRadii[1], 0, Mathf.Min(
-                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[0],
-                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[2])
+                                                                                                        frame.rectTransform.rect.width - frame.cornerRadii[0],
+                                                                                                        frame.rectTransform.rect.height - frame.cornerRadii[2])
                                                                                                     );
                 frame.cornerRadii[2] = EditorGUILayout.Slider("Bottom Left", frame.cornerRadii[2], 0, Mathf.Min(
-                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[3],
-                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[1])
+                                                                                                        frame.rectTransform.rect.width - frame.cornerRadii[3],
+                                                                                                        frame.rectTransform.rect.height - frame.cornerRadii[1])
                                                                                                     );
                 frame.cornerRadii[3] = EditorGUILayout.Slider("Bottom Right", frame.cornerRadii[3], 0, Mathf.Min(
-                                                                                                        frame.rectTransform.sizeDelta.x - frame.cornerRadii[2],
-                                                                                                        frame.rectTransform.sizeDelta.y - frame.cornerRadii[0])
+                                                                                                        frame.rectTransform.rect.width - frame.cornerRadii[2],
+                                                                                                        frame.rectTransform.rect.height - frame.cornerRadii[0])
                                                                                                     );
             }
             else
             {
                 frame.cornerRadii[0] = EditorGUILayout.Slider("Uniform Corner Radius", frame.cornerRadii[0], 0, Mathf.Min(
-                                                                                                                    frame.rectTransform.sizeDelta.x / 2,
-                                                                                                                    frame.rectTransform.sizeDelta.y / 2)
+                                                                                                                    frame.rectTransform.rect.width / 2,
+                                                                                                                    frame.rectTransform.rect.height / 2)
                                                                                                                 );
 
                 for (int i = 1; i < 4; i++)

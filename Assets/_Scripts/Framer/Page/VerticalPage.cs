@@ -6,7 +6,8 @@ namespace Framer
 {
     public class VerticalPage : IPageableDirection
     {
-        public RectTransform bounds;
+        public RectTransform rectTrans;
+        public Rect bounds;
         public List<RectTransform> contents;
 
         public PageAlignment alignment;
@@ -20,9 +21,10 @@ namespace Framer
 
         public IPageableTransition pageTransition;
 
-        public VerticalPage(RectTransform bounds, List<RectTransform> contents, PageAlignment alignment, PageTransition transition, Vector2[] padding, float spacing)
+        public VerticalPage(RectTransform rectTrans, List<RectTransform> contents, PageAlignment alignment, PageTransition transition, Vector2[] padding, float spacing)
         {
-            this.bounds = bounds;
+            this.rectTrans = rectTrans;
+            this.bounds = rectTrans.rect;
             this.contents = contents;
             this.alignment = alignment;
             this.padding = padding;
@@ -38,7 +40,7 @@ namespace Framer
         {
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedPositions[i].x = -bounds.sizeDelta.x / 2f + contents[i].sizeDelta.x / 2f + padding[0].x;
+                assignedPositions[i].x = -bounds.width / 2f + contents[i].rect.width / 2f + padding[0].x;
             }
         }
 
@@ -46,7 +48,7 @@ namespace Framer
         {
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedPositions[i].x = bounds.sizeDelta.x / 2f - contents[i].sizeDelta.x / 2f + padding[1].x;
+                assignedPositions[i].x = bounds.height / 2f - contents[i].rect.width / 2f + padding[1].x;
             }
         }
 

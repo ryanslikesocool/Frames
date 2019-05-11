@@ -9,12 +9,12 @@ namespace Framer
         ///<summary>
         ///Resets horizontal content positions for an animation
         ///</summary>
-        Vector3[] LineUpHorizontal(RectTransform bounds, Vector2[] padding, float spacing);
+        Vector3[] LineUpHorizontal(Rect bounds, Vector2[] padding, float spacing);
 
         ///<summary>
         ///Resets vertical content positions for an animation
         ///</summary>
-        Vector3[] LineUpVertical(RectTransform bounds, Vector2[] padding, float spacing);
+        Vector3[] LineUpVertical(Rect bounds, Vector2[] padding, float spacing);
 
         ///<summary>
         ///Changes a horizontal page with animation

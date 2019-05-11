@@ -18,31 +18,31 @@ namespace Framer
             this.pageInstance = pageInstance;
         }
 
-        public Vector3[] LineUpHorizontal(RectTransform bounds, Vector2[] padding, float spacing)
+        public Vector3[] LineUpHorizontal(Rect bounds, Vector2[] padding, float spacing)
         {
             Vector3[] assignedPositions = new Vector3[contents.Count];
 
-            float spaceUsed = -bounds.sizeDelta.x / 2f + padding[0].x;
+            float spaceUsed = -bounds.width / 2f + padding[0].x;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedPositions[i].x = spaceUsed + contents[i].sizeDelta.x / 2f;
+                assignedPositions[i].x = spaceUsed + contents[i].rect.width / 2f;
 
-                spaceUsed += spacing + contents[i].sizeDelta.x;
+                spaceUsed += spacing + contents[i].rect.width;
             }
 
             return assignedPositions;
         }
 
-        public Vector3[] LineUpVertical(RectTransform bounds, Vector2[] padding, float spacing)
+        public Vector3[] LineUpVertical(Rect bounds, Vector2[] padding, float spacing)
         {
             Vector3[] assignedPositions = new Vector3[contents.Count];
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - padding[1].y;
+            float spaceUsed = bounds.height / 2f - padding[1].y;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedPositions[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedPositions[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= spacing + contents[i].sizeDelta.y;
+                spaceUsed -= spacing + contents[i].rect.height;
             }
 
             return assignedPositions;

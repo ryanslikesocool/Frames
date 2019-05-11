@@ -7,20 +7,22 @@ namespace Framer
 {
     public class VerticalStack : IStackableObject
     {
+        public RectTransform rectTrans;
+        public Rect bounds;
+        public List<RectTransform> contents;
+
         public float inputSpacing;
         public Vector2[] assignedSpacing;
 
         public StackDistribution distribution;
         public StackAlignment alignment;
 
-        public RectTransform bounds;
-        public List<RectTransform> contents;
-
         public Vector2[] padding;
 
-        public VerticalStack(RectTransform bounds, List<RectTransform> contents, StackDistribution distribution, StackAlignment alignment, float inputSpacing, Vector2[] padding)
+        public VerticalStack(RectTransform rectTrans, List<RectTransform> contents, StackDistribution distribution, StackAlignment alignment, float inputSpacing, Vector2[] padding)
         {
-            this.bounds = bounds;
+            this.rectTrans = rectTrans;
+            this.bounds = rectTrans.rect;
             this.contents = contents;
             this.distribution = distribution;
             this.alignment = alignment;
@@ -37,12 +39,12 @@ namespace Framer
         {
             assignedSpacing = new Vector2[contents.Count];
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - padding[1].y;
+            float spaceUsed = bounds.height / 2f - padding[1].y;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= inputSpacing + contents[i].sizeDelta.y;
+                spaceUsed -= inputSpacing + contents[i].rect.height;
             }
         }
 
@@ -54,17 +56,17 @@ namespace Framer
             float contentSpace = 0;
             for (int i = 0; i < contents.Count; i++)
             {
-                contentSpace += contents[i].sizeDelta.y;
+                contentSpace += contents[i].rect.height;
             }
 
-            float startSpacing = bounds.sizeDelta.y / 2f - (contentSpace / 2f + inputSpacing * (contents.Count - 1) / 2f);
+            float startSpacing = bounds.height / 2f - (contentSpace / 2f + inputSpacing * (contents.Count - 1) / 2f);
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - startSpacing;
+            float spaceUsed = bounds.height / 2f - startSpacing;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= inputSpacing + contents[i].sizeDelta.y;
+                spaceUsed -= inputSpacing + contents[i].rect.height;
             }
         }
 
@@ -76,17 +78,17 @@ namespace Framer
             float contentSpace = 0;
             for (int i = 0; i < contents.Count; i++)
             {
-                contentSpace += contents[i].sizeDelta.y;
+                contentSpace += contents[i].rect.height;
             }
 
-            float startSpacing = bounds.sizeDelta.y - (contentSpace + inputSpacing * (contents.Count - 1));
+            float startSpacing = bounds.height - (contentSpace + inputSpacing * (contents.Count - 1));
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - startSpacing + padding[0].y;
+            float spaceUsed = bounds.height / 2f - startSpacing + padding[0].y;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= inputSpacing + contents[i].sizeDelta.y;
+                spaceUsed -= inputSpacing + contents[i].rect.height;
             }
         }
 
@@ -98,17 +100,17 @@ namespace Framer
             float contentSpace = 0;
             for (int i = 0; i < contents.Count; i++)
             {
-                contentSpace += contents[i].sizeDelta.y;
+                contentSpace += contents[i].rect.height;
             }
 
-            float autoSpacing = (bounds.sizeDelta.y - contentSpace) / (contents.Count - 1) - (padding[0].y + padding[1].y) / 2f;
+            float autoSpacing = (bounds.height - contentSpace) / (contents.Count - 1) - (padding[0].y + padding[1].y) / 2f;
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - padding[0].y;
+            float spaceUsed = bounds.height / 2f - padding[0].y;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= autoSpacing + contents[i].sizeDelta.y;
+                spaceUsed -= autoSpacing + contents[i].rect.height;
             }
         }
 
@@ -120,17 +122,17 @@ namespace Framer
             float contentSpace = 0;
             for (int i = 0; i < contents.Count; i++)
             {
-                contentSpace += contents[i].sizeDelta.y;
+                contentSpace += contents[i].rect.height;
             }
 
-            float autoSpacing = (bounds.sizeDelta.y - contentSpace) / 2;
+            float autoSpacing = (bounds.height - contentSpace) / 2;
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - autoSpacing;
+            float spaceUsed = bounds.height / 2f - autoSpacing;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= contents[i].sizeDelta.y;
+                spaceUsed -= contents[i].rect.height;
             }
         }
 
@@ -142,17 +144,17 @@ namespace Framer
             float contentSpace = 0;
             for (int i = 0; i < contents.Count; i++)
             {
-                contentSpace += contents[i].sizeDelta.y;
+                contentSpace += contents[i].rect.height;
             }
 
-            float autoSpacing = (bounds.sizeDelta.y - contentSpace) / (contents.Count + 1);
+            float autoSpacing = (bounds.height - contentSpace) / (contents.Count + 1);
 
-            float spaceUsed = bounds.sizeDelta.y / 2f - autoSpacing;
+            float spaceUsed = bounds.height / 2f - autoSpacing;
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].sizeDelta.y / 2f;
+                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
 
-                spaceUsed -= autoSpacing + contents[i].sizeDelta.y;
+                spaceUsed -= autoSpacing + contents[i].rect.height;
             }
         }
 
@@ -165,7 +167,7 @@ namespace Framer
         {
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].x = -bounds.sizeDelta.x / 2f + contents[i].sizeDelta.x / 2f + padding[0].x;
+                assignedSpacing[i].x = -bounds.width / 2f + contents[i].rect.width / 2f + padding[0].x;
             }
         }
 
@@ -174,7 +176,7 @@ namespace Framer
         {
             for (int i = 0; i < contents.Count; i++)
             {
-                assignedSpacing[i].x = bounds.sizeDelta.x / 2f - contents[i].sizeDelta.x / 2f + padding[1].x;
+                assignedSpacing[i].x = bounds.width / 2f - contents[i].rect.width / 2f + padding[1].x;
             }
         }
 

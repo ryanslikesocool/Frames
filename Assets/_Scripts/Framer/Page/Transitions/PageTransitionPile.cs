@@ -18,7 +18,7 @@ namespace Framer
             this.pageInstance = pageInstance;
         }
 
-        public Vector3[] LineUpHorizontal(RectTransform bounds, Vector2[] padding, float spacing)
+        public Vector3[] LineUpHorizontal(Rect bounds, Vector2[] padding, float spacing)
         {
             Vector3[] assignedPositions = new Vector3[contents.Count];
 
@@ -34,7 +34,7 @@ namespace Framer
             return assignedPositions;
         }
 
-        public Vector3[] LineUpVertical(RectTransform bounds, Vector2[] padding, float spacing)
+        public Vector3[] LineUpVertical(Rect bounds, Vector2[] padding, float spacing)
         {
             Vector3[] assignedPositions = new Vector3[contents.Count];
 

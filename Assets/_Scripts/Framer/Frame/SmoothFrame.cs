@@ -6,7 +6,8 @@ namespace Framer
 {
     public class SmoothFrame : IFrameableObject
     {
-        public RectTransform bounds;
+        public RectTransform rectTrans;
+        public Rect bounds;
 
         public float[] cornerRadii;
         public int levelOfDetail;
@@ -14,9 +15,10 @@ namespace Framer
         public List<Vector2> meshPoints = new List<Vector2>();
 
         //Frame corners are created similar to progressing along a unit circle.
-        public SmoothFrame(RectTransform bounds, float[] cornerRadii, int levelOfDetail)
+        public SmoothFrame(RectTransform rectTrans, float[] cornerRadii, int levelOfDetail)
         {
-            this.bounds = bounds;
+            this.rectTrans = rectTrans;
+            this.bounds = rectTrans.rect;
             this.cornerRadii = cornerRadii;
             this.levelOfDetail = levelOfDetail;
         }
@@ -29,16 +31,16 @@ namespace Framer
             switch (cornerNumber)
             {
                 case 0:
-                    offset.Set(bounds.sizeDelta.x / 2 - radius, bounds.sizeDelta.y / 2 - radius);
+                    offset.Set(bounds.width / 2 - radius, bounds.height / 2 - radius);
                     break;
                 case 1:
-                    offset.Set(-bounds.sizeDelta.x / 2 + radius, bounds.sizeDelta.y / 2 - radius);
+                    offset.Set(-bounds.width / 2 + radius, bounds.height / 2 - radius);
                     break;
                 case 2:
-                    offset.Set(-bounds.sizeDelta.x / 2 + radius, -bounds.sizeDelta.y / 2 + radius);
+                    offset.Set(-bounds.width / 2 + radius, -bounds.height / 2 + radius);
                     break;
                 case 3:
-                    offset.Set(bounds.sizeDelta.x / 2 - radius, -bounds.sizeDelta.y / 2 + radius);
+                    offset.Set(bounds.width / 2 - radius, -bounds.height / 2 + radius);
                     break;
             }
 
