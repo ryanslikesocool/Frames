@@ -47,7 +47,7 @@ namespace Framer
             }
         }
 
-        void CreateFrame()
+        public void CreateFrame()
         {
             switch (cornerType)
             {
