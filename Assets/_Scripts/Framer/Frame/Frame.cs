@@ -20,11 +20,17 @@ namespace Framer
         [HideInInspector]
         public FrameCornerType cornerType = FrameCornerType.Round;
         [HideInInspector]
+        public RendererType rendererType = RendererType.Image;
+        [HideInInspector]
         public float[] cornerRadii = new float[4] { 20, 20, 20, 20 };
         [HideInInspector]
         public int levelOfDetail = 8;
         [HideInInspector]
         public bool splitCorners = false;
+        [HideInInspector]
+        public bool overrideSorting = false;
+        [HideInInspector]
+        public int sortingOrderOverride = 0;
 
         public IFrameableObject frameInstance;
 
@@ -33,33 +39,29 @@ namespace Framer
             rectTransform = GetComponent<RectTransform>();
         }
 
-        //Probably not necessary but you never know
-        void OnEnable()
-        {
-            CreateFrameMesh();
-        }
-
         void Update()
         {
             if (transform.hasChanged && !Application.isPlaying)
             {
-                CreateFrameMesh();
+                CreateFrame();
             }
         }
 
-        public void CreateFrameMesh()
+        void CreateFrame()
         {
-            if (cornerType == FrameCornerType.Round)
+            switch (cornerType)
             {
-                frameInstance = new RoundFrame(rectTransform, cornerRadii, levelOfDetail);
-            }
-            else
-            {
-                frameInstance = new SmoothFrame(rectTransform, cornerRadii, levelOfDetail);
+                case FrameCornerType.Round:
+                    frameInstance = new RoundFrame(rectTransform, cornerRadii, levelOfDetail);
+                    break;
+                case FrameCornerType.Smooth:
+                    frameInstance = new SmoothFrame(rectTransform, cornerRadii, levelOfDetail);
+                    break;
             }
 
             GetComponent<MeshFilter>().sharedMesh = frameInstance.CreateMesh();
             UpdateFrameColor(GetComponent<MeshFilter>().sharedMesh);
+            UpdateSortingOrder();
         }
 
         void UpdateFrameColor(Mesh mesh)
@@ -72,6 +74,18 @@ namespace Framer
             }
 
             mesh.colors32 = vertexColors;
+        }
+
+        void UpdateSortingOrder()
+        {
+            if (overrideSorting)
+            {
+                GetComponent<MeshRenderer>().sortingOrder = sortingOrderOverride;
+            }
+            else
+            {
+                GetComponent<MeshRenderer>().sortingOrder = 0;
+            }
         }
     }
 }

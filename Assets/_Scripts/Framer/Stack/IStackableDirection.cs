@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Framer
 {
-    public interface IStackableObject
+    public interface IStackableDirection
     {
         void Stack(List<RectTransform> contents);
         List<RectTransform> Sort();

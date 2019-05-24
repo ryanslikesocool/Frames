@@ -16,9 +16,12 @@ namespace Framer
 
         private SerializedProperty frameColor;
         private SerializedProperty cornerType;
+        private SerializedProperty rendererType;
         private SerializedProperty splitCorners;
         private SerializedProperty cornerRadii;
         private SerializedProperty levelOfDetail;
+        private SerializedProperty overrideSorting;
+        private SerializedProperty sortingOrderOverride;
 
         void OnEnable()
         {
@@ -26,9 +29,12 @@ namespace Framer
 
             frameColor = serializedObject.FindProperty("frameColor");
             cornerType = serializedObject.FindProperty("cornerType");
+            rendererType = serializedObject.FindProperty("rendererType");
             splitCorners = serializedObject.FindProperty("splitCorners");
             cornerRadii = serializedObject.FindProperty("cornerRadii");
             levelOfDetail = serializedObject.FindProperty("levelOfDetail");
+            overrideSorting = serializedObject.FindProperty("overrideSorting");
+            sortingOrderOverride = serializedObject.FindProperty("sortingOrderOverride");
         }
 
         void OnSceneGUI()
@@ -102,15 +108,23 @@ namespace Framer
 
             EditorGUILayout.Space();
 
-            if (GUILayout.Button("Force Create Frame Mesh"))
+            overrideSorting.boolValue = EditorGUILayout.Toggle("Override Sorting", overrideSorting.boolValue);
+            if (overrideSorting.boolValue)
             {
-                frame.CreateFrameMesh();
+                sortingOrderOverride.intValue = EditorGUILayout.IntField("Sorting Layer", sortingOrderOverride.intValue);
+            }
+
+            EditorGUILayout.Space();
+
+            if (GUILayout.Button("Force Create Frame"))
+            {
+                frame.CreateFrame();
             }
 
             if (GUI.changed && !EditorApplication.isPlaying)
             {
                 serializedObject.ApplyModifiedProperties();
-                frame.CreateFrameMesh();
+                frame.CreateFrame();
                 EditorUtility.SetDirty(frame);
             }
         }

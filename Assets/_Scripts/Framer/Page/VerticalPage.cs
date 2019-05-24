@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Framer
 {
-    public class VerticalPage : IPageableDirection
+    public class VerticalPage : IPageableObject
     {
         public RectTransform rectTrans;
         public Rect bounds;

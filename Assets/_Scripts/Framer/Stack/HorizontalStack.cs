@@ -5,7 +5,7 @@ using System;
 
 namespace Framer
 {
-    public class HorizontalStack : IStackableObject
+    public class HorizontalStack : IStackableDirection
     {
         public RectTransform rectTrans;
         public Rect bounds;

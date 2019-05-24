@@ -7,7 +7,6 @@ using UnityEditor;
 namespace Framer
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(Frame))]
     public class Page : MonoBehaviour
     {
         [HideInInspector]
@@ -32,7 +31,7 @@ namespace Framer
         public float timeTakenDuringAnimation = 0.375f,
                      animationTimeElapsed = 0;
 
-        public IPageableDirection pageInstance;
+        public IPageableObject pageInstance;
 
         void Awake()
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Framer
 {
-    public interface IPageableDirection
+    public interface IPageableObject
     {
         ///<summary>
         ///Sets the current assigned position for the next transition use

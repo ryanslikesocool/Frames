@@ -10,9 +10,9 @@ namespace Framer
 
         public Vector2[] frameDelta = null;
 
-        public IPageableDirection pageInstance;
+        public IPageableObject pageInstance;
 
-        public PageTransitionLinear(List<RectTransform> contents, IPageableDirection pageInstance)
+        public PageTransitionLinear(List<RectTransform> contents, IPageableObject pageInstance)
         {
             this.contents = contents;
             this.pageInstance = pageInstance;

@@ -8,7 +8,6 @@ using System;
 namespace Framer
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(Frame))]
     public class Stack : MonoBehaviour
     {
         [HideInInspector]
@@ -26,7 +25,7 @@ namespace Framer
         [HideInInspector]
         public List<RectTransform> contents = new List<RectTransform>();
 
-        public IStackableObject stackInstance;
+        public IStackableDirection stackInstance;
 
         void Awake()
         {
