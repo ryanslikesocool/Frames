@@ -2,116 +2,119 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framer
+namespace ifelse
 {
-    public class HorizontalPage : IPageableObject
+    namespace Framer
     {
-        public RectTransform rectTrans;
-        public Rect bounds;
-        public List<RectTransform> contents;
-
-        public PageAlignment alignment;
-        public PageTransition transition;
-
-        public Vector3[] originalPositions,
-                         assignedPositions;
-        public Vector2[] padding;
-
-        public float spacing;
-
-        public IPageableTransition pageTransition;
-
-        public HorizontalPage(RectTransform rectTrans, List<RectTransform> contents, PageAlignment alignment, PageTransition transition, Vector2[] padding, float spacing)
+        public class HorizontalPage : IPageableObject
         {
-            this.rectTrans = rectTrans;
-            this.bounds = rectTrans.rect;
-            this.contents = contents;
-            this.alignment = alignment;
-            this.padding = padding;
-            this.transition = transition;
-            this.spacing = spacing;
+            public RectTransform rectTrans;
+            public Rect bounds;
+            public List<RectTransform> contents;
 
-            ChangeTransition(transition);
-        }
+            public PageAlignment alignment;
+            public PageTransition transition;
 
-        #region Alignment
+            public Vector3[] originalPositions,
+                             assignedPositions;
+            public Vector2[] padding;
 
-        void GetBottomAlignment()
-        {
-            for (int i = 0; i < contents.Count; i++)
+            public float spacing;
+
+            public IPageableTransition pageTransition;
+
+            public HorizontalPage(RectTransform rectTrans, List<RectTransform> contents, PageAlignment alignment, PageTransition transition, Vector2[] padding, float spacing)
             {
-                assignedPositions[i].y = -bounds.height / 2f + contents[i].rect.height / 2f + padding[0].y;
-            }
-        }
+                this.rectTrans = rectTrans;
+                this.bounds = rectTrans.rect;
+                this.contents = contents;
+                this.alignment = alignment;
+                this.padding = padding;
+                this.transition = transition;
+                this.spacing = spacing;
 
-        void GetTopAlignment()
-        {
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedPositions[i].y = bounds.height / 2f - contents[i].rect.height / 2f + padding[1].y;
-            }
-        }
-
-        #endregion
-
-        public void SetAssignedPositions()
-        {
-            assignedPositions = new Vector3[contents.Count];
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedPositions[i] = contents[i].localPosition;
-            }
-        }
-
-        public void ChangeTransition(PageTransition transition)
-        {
-            switch (transition)
-            {
-                case PageTransition.Linear:
-                    pageTransition = new PageTransitionLinear(contents, this);
-                    break;
-                case PageTransition.Pile:
-                    pageTransition = new PageTransitionPile(contents, this);
-                    break;
-            }
-        }
-
-        public void LineUp(float spacing)
-        {
-            assignedPositions = pageTransition.LineUpHorizontal(bounds, padding, spacing);
-            originalPositions = new Vector3[contents.Count];
-
-            switch (alignment)
-            {
-                case PageAlignment.Left:
-                    GetBottomAlignment();
-                    break;
-                case PageAlignment.Right:
-                    GetTopAlignment();
-                    break;
+                ChangeTransition(transition);
             }
 
-            for (int i = 0; i < contents.Count; i++)
+            #region Alignment
+
+            void GetBottomAlignment()
             {
-                if (contents[i] != null)
+                for (int i = 0; i < contents.Count; i++)
                 {
-                    contents[i].localPosition = assignedPositions[i];
+                    assignedPositions[i].y = -bounds.height / 2f + contents[i].rect.height / 2f + padding[0].y;
                 }
             }
-            originalPositions = assignedPositions;
-        }
 
-        public void SetPage(int initial, int target)
-        {
-            pageTransition.ChangePageHorizontal(initial, target, 1, 1, spacing);
-            SetAssignedPositions();
-        }
+            void GetTopAlignment()
+            {
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedPositions[i].y = bounds.height / 2f - contents[i].rect.height / 2f + padding[1].y;
+                }
+            }
 
-        public void TransitionPage(int initial, int target, float time, float duration)
-        {
-            float clampedTime = Mathf.Clamp(time, 0, duration);
+            #endregion
 
-            pageTransition.ChangePageHorizontal(initial, target, clampedTime, duration, spacing);
+            public void SetAssignedPositions()
+            {
+                assignedPositions = new Vector3[contents.Count];
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedPositions[i] = contents[i].localPosition;
+                }
+            }
+
+            public void ChangeTransition(PageTransition transition)
+            {
+                switch (transition)
+                {
+                    case PageTransition.Linear:
+                        pageTransition = new PageTransitionLinear(contents, this);
+                        break;
+                    case PageTransition.Pile:
+                        pageTransition = new PageTransitionPile(contents, this);
+                        break;
+                }
+            }
+
+            public void LineUp(float spacing)
+            {
+                assignedPositions = pageTransition.LineUpHorizontal(bounds, padding, spacing);
+                originalPositions = new Vector3[contents.Count];
+
+                switch (alignment)
+                {
+                    case PageAlignment.Left:
+                        GetBottomAlignment();
+                        break;
+                    case PageAlignment.Right:
+                        GetTopAlignment();
+                        break;
+                }
+
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    if (contents[i] != null)
+                    {
+                        contents[i].localPosition = assignedPositions[i];
+                    }
+                }
+                originalPositions = assignedPositions;
+            }
+
+            public void SetPage(int initial, int target)
+            {
+                pageTransition.ChangePageHorizontal(initial, target, 1, 1, spacing);
+                SetAssignedPositions();
+            }
+
+            public void TransitionPage(int initial, int target, float time, float duration)
+            {
+                float clampedTime = Mathf.Clamp(time, 0, duration);
+
+                pageTransition.ChangePageHorizontal(initial, target, clampedTime, duration, spacing);
+            }
         }
     }
 }

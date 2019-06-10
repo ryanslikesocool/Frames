@@ -1,27 +1,30 @@
-﻿namespace Framer
+﻿namespace ifelse
 {
-    public enum PageDirection
+    namespace Framer
     {
-        Horizontal,
-        Vertical
-    }
+        public enum PageDirection
+        {
+            Horizontal,
+            Vertical
+        }
 
-    public enum PageAlignment
-    {
-        Left,    //Bottom
-        Center,  //Center
-        Right    //Top
-    }
+        public enum PageAlignment
+        {
+            Left,    //Bottom
+            Center,  //Center
+            Right    //Top
+        }
 
-    public enum PageTransition
-    {
-        Linear,
-        Pile,
+        public enum PageTransition
+        {
+            Linear,
+            Pile,
 
-        ///Haven't Implemented the rest of these yet
-        //Coverflow,
-        //Cube,
-        //Wheel,
-        //Path
+            ///Haven't Implemented the rest of these yet
+            //Coverflow,
+            //Cube,
+            //Wheel,
+            //Path
+        }
     }
 }

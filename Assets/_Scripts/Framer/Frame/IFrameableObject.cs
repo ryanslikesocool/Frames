@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framer
+namespace ifelse
 {
-    public interface IFrameableObject
+    namespace Framer
     {
-        Mesh CreateMesh();
+        public interface IFrameableObject
+        {
+            Mesh CreateMesh();
+        }
     }
 }

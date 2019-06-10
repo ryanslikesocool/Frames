@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framer
+namespace ifelse
 {
-    public interface IStackableDirection
+    namespace Framer
     {
-        void Stack(List<RectTransform> contents);
-        List<RectTransform> Sort();
+        public interface IStackableDirection
+        {
+            void Stack(List<RectTransform> contents);
+            List<RectTransform> Sort();
+        }
     }
 }

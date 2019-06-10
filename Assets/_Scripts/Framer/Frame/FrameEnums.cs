@@ -1,14 +1,17 @@
-﻿namespace Framer
+﻿namespace ifelse
 {
-    public enum FrameCornerType
+    namespace Framer
     {
-        Round,
-        Smooth
-    }
+        public enum FrameCornerType
+        {
+            Round,
+            Smooth
+        }
 
-    public enum RendererType
-    {
-        Mesh,
-        Image
+        public enum RendererType
+        {
+            Mesh,
+            Image
+        }
     }
 }

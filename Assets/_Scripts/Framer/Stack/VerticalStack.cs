@@ -3,255 +3,258 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Framer
+namespace ifelse
 {
-    public class VerticalStack : IStackableDirection
+    namespace Framer
     {
-        public RectTransform rectTrans;
-        public Rect bounds;
-        public List<RectTransform> contents;
-
-        public float inputSpacing;
-        public Vector2[] assignedSpacing;
-
-        public StackDistribution distribution;
-        public StackAlignment alignment;
-
-        public Vector2[] padding;
-
-        public VerticalStack(RectTransform rectTrans, List<RectTransform> contents, StackDistribution distribution, StackAlignment alignment, float inputSpacing, Vector2[] padding)
+        public class VerticalStack : IStackableDirection
         {
-            this.rectTrans = rectTrans;
-            this.bounds = rectTrans.rect;
-            this.contents = contents;
-            this.distribution = distribution;
-            this.alignment = alignment;
-            this.inputSpacing = inputSpacing;
-            this.padding = padding;
+            public RectTransform rectTrans;
+            public Rect bounds;
+            public List<RectTransform> contents;
 
-            this.assignedSpacing = new Vector2[contents.Count];
-        }
+            public float inputSpacing;
+            public Vector2[] assignedSpacing;
 
-        #region Distribution
+            public StackDistribution distribution;
+            public StackAlignment alignment;
 
-        //Snaps stack at beginning with spacing between content
-        void GetStartSpacing(out Vector2[] assignedSpacing)
-        {
-            assignedSpacing = new Vector2[contents.Count];
+            public Vector2[] padding;
 
-            float spaceUsed = bounds.height / 2f - padding[1].y;
-            for (int i = 0; i < contents.Count; i++)
+            public VerticalStack(RectTransform rectTrans, List<RectTransform> contents, StackDistribution distribution, StackAlignment alignment, float inputSpacing, Vector2[] padding)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+                this.rectTrans = rectTrans;
+                this.bounds = rectTrans.rect;
+                this.contents = contents;
+                this.distribution = distribution;
+                this.alignment = alignment;
+                this.inputSpacing = inputSpacing;
+                this.padding = padding;
 
-                spaceUsed -= inputSpacing + contents[i].rect.height;
-            }
-        }
-
-        //Centers stack with spacing between content
-        void GetCenterSpacing(out Vector2[] assignedSpacing)
-        {
-            assignedSpacing = new Vector2[contents.Count];
-
-            float contentSpace = 0;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                contentSpace += contents[i].rect.height;
+                this.assignedSpacing = new Vector2[contents.Count];
             }
 
-            float startSpacing = bounds.height / 2f - (contentSpace / 2f + inputSpacing * (contents.Count - 1) / 2f);
+            #region Distribution
 
-            float spaceUsed = bounds.height / 2f - startSpacing;
-            for (int i = 0; i < contents.Count; i++)
+            //Snaps stack at beginning with spacing between content
+            void GetStartSpacing(out Vector2[] assignedSpacing)
             {
-                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+                assignedSpacing = new Vector2[contents.Count];
 
-                spaceUsed -= inputSpacing + contents[i].rect.height;
-            }
-        }
-
-        //Snaps stack at end with spacing between content
-        void GetEndSpacing(out Vector2[] assignedSpacing)
-        {
-            assignedSpacing = new Vector2[contents.Count];
-
-            float contentSpace = 0;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                contentSpace += contents[i].rect.height;
-            }
-
-            float startSpacing = bounds.height - (contentSpace + inputSpacing * (contents.Count - 1));
-
-            float spaceUsed = bounds.height / 2f - startSpacing + padding[0].y;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
-
-                spaceUsed -= inputSpacing + contents[i].rect.height;
-            }
-        }
-
-        //Even spaces only between content, not bounds
-        void GetBetweenSpacing(out Vector2[] assignedSpacing)
-        {
-            assignedSpacing = new Vector2[contents.Count];
-
-            float contentSpace = 0;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                contentSpace += contents[i].rect.height;
-            }
-
-            float autoSpacing = (bounds.height - contentSpace) / (contents.Count - 1) - (padding[0].y + padding[1].y) / 2f;
-
-            float spaceUsed = bounds.height / 2f - padding[0].y;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
-
-                spaceUsed -= autoSpacing + contents[i].rect.height;
-            }
-        }
-
-        //Cramped content with even spaces around bounds
-        void GetAroundSpacing(out Vector2[] assignedSpacing)
-        {
-            assignedSpacing = new Vector2[contents.Count];
-
-            float contentSpace = 0;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                contentSpace += contents[i].rect.height;
-            }
-
-            float autoSpacing = (bounds.height - contentSpace) / 2;
-
-            float spaceUsed = bounds.height / 2f - autoSpacing;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
-
-                spaceUsed -= contents[i].rect.height;
-            }
-        }
-
-        //Even spacing between content and bounds
-        void GetEvenSpacing(out Vector2[] assignedSpacing)
-        {
-            assignedSpacing = new Vector2[contents.Count];
-
-            float contentSpace = 0;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                contentSpace += contents[i].rect.height;
-            }
-
-            float autoSpacing = (bounds.height - contentSpace) / (contents.Count + 1);
-
-            float spaceUsed = bounds.height / 2f - autoSpacing;
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
-
-                spaceUsed -= autoSpacing + contents[i].rect.height;
-            }
-        }
-
-        #endregion
-
-        #region Alignment
-
-        //Snaps elements to bottom edge of bounds
-        void GetLeftAlignment()
-        {
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedSpacing[i].x = -bounds.width / 2f + contents[i].rect.width / 2f + padding[0].x;
-            }
-        }
-
-        //Snaps elements to right edge of bounds
-        void GetRightAlignment()
-        {
-            for (int i = 0; i < contents.Count; i++)
-            {
-                assignedSpacing[i].x = bounds.width / 2f - contents[i].rect.width / 2f + padding[1].x;
-            }
-        }
-
-        #endregion
-
-        //Gets spacing and alignments and sets transforms accordingly
-        public void Stack(List<RectTransform> contents)
-        {
-            switch (distribution)
-            {
-                case StackDistribution.Start:
-                    GetStartSpacing(out assignedSpacing);
-                    break;
-                case StackDistribution.Center:
-                    GetCenterSpacing(out assignedSpacing);
-                    break;
-                case StackDistribution.End:
-                    GetEndSpacing(out assignedSpacing);
-                    break;
-                case StackDistribution.SpaceBetween:
-                    GetBetweenSpacing(out assignedSpacing);
-                    break;
-                case StackDistribution.SpaceAround:
-                    GetAroundSpacing(out assignedSpacing);
-                    break;
-                case StackDistribution.SpaceEvenly:
-                    GetEvenSpacing(out assignedSpacing);
-                    break;
-            }
-
-            switch (alignment)
-            {
-                case StackAlignment.Left:
-                    GetLeftAlignment();
-                    break;
-                case StackAlignment.Right:
-                    GetRightAlignment();
-                    break;
-            }
-
-            for (int i = 0; i < contents.Count; i++)
-            {
-                if (contents[i] != null)
+                float spaceUsed = bounds.height / 2f - padding[1].y;
+                for (int i = 0; i < contents.Count; i++)
                 {
-                    contents[i].localPosition = assignedSpacing[i];
+                    assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+
+                    spaceUsed -= inputSpacing + contents[i].rect.height;
                 }
             }
-        }
 
-        //Used for drag and drop
-        public List<RectTransform> Sort()
-        {
-            List<RectTransform> returnContents = new List<RectTransform>(contents);
-            float[] yValues = new float[contents.Count];
-
-            for (int i = 0; i < yValues.Length; i++)
+            //Centers stack with spacing between content
+            void GetCenterSpacing(out Vector2[] assignedSpacing)
             {
-                yValues[i] = contents[i].localPosition.y;
+                assignedSpacing = new Vector2[contents.Count];
+
+                float contentSpace = 0;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    contentSpace += contents[i].rect.height;
+                }
+
+                float startSpacing = bounds.height / 2f - (contentSpace / 2f + inputSpacing * (contents.Count - 1) / 2f);
+
+                float spaceUsed = bounds.height / 2f - startSpacing;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+
+                    spaceUsed -= inputSpacing + contents[i].rect.height;
+                }
             }
 
-            Array.Sort(yValues);
-            Array.Reverse(yValues); //Vertical sorting needs to be reversed so it doens't start at the bottom
-
-            for (int i = 0; i < yValues.Length; i++)
+            //Snaps stack at end with spacing between content
+            void GetEndSpacing(out Vector2[] assignedSpacing)
             {
-                foreach (RectTransform contentPiece in contents)
+                assignedSpacing = new Vector2[contents.Count];
+
+                float contentSpace = 0;
+                for (int i = 0; i < contents.Count; i++)
                 {
-                    if (contentPiece.localPosition.y == yValues[i])
+                    contentSpace += contents[i].rect.height;
+                }
+
+                float startSpacing = bounds.height - (contentSpace + inputSpacing * (contents.Count - 1));
+
+                float spaceUsed = bounds.height / 2f - startSpacing + padding[0].y;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+
+                    spaceUsed -= inputSpacing + contents[i].rect.height;
+                }
+            }
+
+            //Even spaces only between content, not bounds
+            void GetBetweenSpacing(out Vector2[] assignedSpacing)
+            {
+                assignedSpacing = new Vector2[contents.Count];
+
+                float contentSpace = 0;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    contentSpace += contents[i].rect.height;
+                }
+
+                float autoSpacing = (bounds.height - contentSpace) / (contents.Count - 1) - (padding[0].y + padding[1].y) / 2f;
+
+                float spaceUsed = bounds.height / 2f - padding[0].y;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+
+                    spaceUsed -= autoSpacing + contents[i].rect.height;
+                }
+            }
+
+            //Cramped content with even spaces around bounds
+            void GetAroundSpacing(out Vector2[] assignedSpacing)
+            {
+                assignedSpacing = new Vector2[contents.Count];
+
+                float contentSpace = 0;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    contentSpace += contents[i].rect.height;
+                }
+
+                float autoSpacing = (bounds.height - contentSpace) / 2;
+
+                float spaceUsed = bounds.height / 2f - autoSpacing;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+
+                    spaceUsed -= contents[i].rect.height;
+                }
+            }
+
+            //Even spacing between content and bounds
+            void GetEvenSpacing(out Vector2[] assignedSpacing)
+            {
+                assignedSpacing = new Vector2[contents.Count];
+
+                float contentSpace = 0;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    contentSpace += contents[i].rect.height;
+                }
+
+                float autoSpacing = (bounds.height - contentSpace) / (contents.Count + 1);
+
+                float spaceUsed = bounds.height / 2f - autoSpacing;
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].y = spaceUsed - contents[i].rect.height / 2f;
+
+                    spaceUsed -= autoSpacing + contents[i].rect.height;
+                }
+            }
+
+            #endregion
+
+            #region Alignment
+
+            //Snaps elements to bottom edge of bounds
+            void GetLeftAlignment()
+            {
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].x = -bounds.width / 2f + contents[i].rect.width / 2f + padding[0].x;
+                }
+            }
+
+            //Snaps elements to right edge of bounds
+            void GetRightAlignment()
+            {
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    assignedSpacing[i].x = bounds.width / 2f - contents[i].rect.width / 2f + padding[1].x;
+                }
+            }
+
+            #endregion
+
+            //Gets spacing and alignments and sets transforms accordingly
+            public void Stack(List<RectTransform> contents)
+            {
+                switch (distribution)
+                {
+                    case StackDistribution.Start:
+                        GetStartSpacing(out assignedSpacing);
+                        break;
+                    case StackDistribution.Center:
+                        GetCenterSpacing(out assignedSpacing);
+                        break;
+                    case StackDistribution.End:
+                        GetEndSpacing(out assignedSpacing);
+                        break;
+                    case StackDistribution.SpaceBetween:
+                        GetBetweenSpacing(out assignedSpacing);
+                        break;
+                    case StackDistribution.SpaceAround:
+                        GetAroundSpacing(out assignedSpacing);
+                        break;
+                    case StackDistribution.SpaceEvenly:
+                        GetEvenSpacing(out assignedSpacing);
+                        break;
+                }
+
+                switch (alignment)
+                {
+                    case StackAlignment.Left:
+                        GetLeftAlignment();
+                        break;
+                    case StackAlignment.Right:
+                        GetRightAlignment();
+                        break;
+                }
+
+                for (int i = 0; i < contents.Count; i++)
+                {
+                    if (contents[i] != null)
                     {
-                        returnContents[i] = contentPiece;
+                        contents[i].localPosition = assignedSpacing[i];
                     }
                 }
             }
 
-            return returnContents;
+            //Used for drag and drop
+            public List<RectTransform> Sort()
+            {
+                List<RectTransform> returnContents = new List<RectTransform>(contents);
+                float[] yValues = new float[contents.Count];
+
+                for (int i = 0; i < yValues.Length; i++)
+                {
+                    yValues[i] = contents[i].localPosition.y;
+                }
+
+                Array.Sort(yValues);
+                Array.Reverse(yValues); //Vertical sorting needs to be reversed so it doens't start at the bottom
+
+                for (int i = 0; i < yValues.Length; i++)
+                {
+                    foreach (RectTransform contentPiece in contents)
+                    {
+                        if (contentPiece.localPosition.y == yValues[i])
+                        {
+                            returnContents[i] = contentPiece;
+                        }
+                    }
+                }
+
+                return returnContents;
+            }
         }
     }
 }
