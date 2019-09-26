@@ -45,7 +45,7 @@ namespace ifelse
                 //Parent to first canvas, otherwise create one and parent if needed
                 if (FindObjectOfType<Canvas>() != null)
                 {
-                    go.transform.parent = FindObjectOfType<Canvas>().transform;
+                    go.transform.SetParent(FindObjectOfType<Canvas>().transform);
                 }
                 else
                 {
