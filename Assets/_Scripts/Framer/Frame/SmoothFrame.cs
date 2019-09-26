@@ -78,7 +78,10 @@ namespace ifelse
                             extraPoint.Set(offset.x + radius, offset.y);
                             break;
                     }
-                    meshPoints.Add(extraPoint);
+                    if (!meshPoints.Contains(extraPoint))
+                    {
+                        meshPoints.Add(extraPoint);
+                    }
                 }
                 else
                 {
