@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -57,6 +57,16 @@ namespace ifelse
 
                     go.transform.SetParent(canvas.transform);
                 }
+
+                // Reset local scale and position because why not
+                go.transform.localScale = Vector3.one;
+                go.transform.localPosition = Vector3.zero;
+
+                // Disable unnecessary mesh rendering values
+                MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
+                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                meshRenderer.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
+                meshRenderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
 
                 // Register the creation in the undo system
                 Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
