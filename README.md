@@ -1,4 +1,4 @@
-![Stack Demo](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/StackPreview.gif)
+![Stack Demo](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/StackPreview.png)
 
 # Unity-UI-Layout
 A set of Framer X-esque elements and tools for Unity 2019.1+.  

@@ -9,6 +9,9 @@
 [Ll]ogs/
 Assets/AssetStoreTools*
 
+# macOS System Files
+*.DS_Store
+
 # Visual Studio cache directory
 .vs/
 .vscode/
