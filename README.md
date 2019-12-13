@@ -43,8 +43,6 @@ Pagination!  It's super easy to make your own transitions.
 - Creation menu  
 - Custom inspector  
 
-**More coming soon!**
-
 ## Usage
 Drop into a project.  In the GameObject menu, there's a folder called "Framer".  Create an element and have fun!
 
