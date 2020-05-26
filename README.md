@@ -5,6 +5,7 @@ A set of Framer X-esque elements and tools for Unity 2020.1+.
 
 ## Frame
 Frames are containers
+
 ![Stack Inspector Preview](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/FrameInspectorPreview.png)  
 **Frame Features**  
 - Round and smooth corners
@@ -15,6 +16,7 @@ Frames are containers
 
 ## Stack
 Stacks are easier-to-understand versions of Unity's linear Layout Group components
+
 ![Stack Inspector Preview](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/StackInspectorPreview.png)  
 **Stack Features Included**
 - Horizontal and vertical stacks
@@ -25,6 +27,7 @@ Stacks are easier-to-understand versions of Unity's linear Layout Group componen
 
 ## Page
 Page between frames with easy-to-create transitions
+
 ![Page Inspector Preview](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/PageInspectorPreview.png)  
 **Page Features Included**
 - Horizontal and vertical pages
