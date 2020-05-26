@@ -20,7 +20,7 @@ namespace ifelse.Frames
         private SerializedProperty transition;
         private SerializedProperty targetIndex;
         private SerializedProperty currentIndex;
-        private SerializedProperty timeTakenDuringAnimation;
+        private SerializedProperty animationDuration;
         private SerializedProperty spacing;
         private SerializedProperty padding;
 
@@ -33,19 +33,25 @@ namespace ifelse.Frames
             transition = serializedObject.FindProperty("transition");
             targetIndex = serializedObject.FindProperty("targetIndex");
             currentIndex = serializedObject.FindProperty("currentIndex");
-            timeTakenDuringAnimation = serializedObject.FindProperty("timeTakenDuringAnimation");
+            animationDuration = serializedObject.FindProperty("animationDuration");
             spacing = serializedObject.FindProperty("spacing");
             padding = serializedObject.FindProperty("padding");
 
-            content = new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true);
-            content.drawHeaderCallback = rect =>
+            content = new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true)
             {
-                EditorGUI.LabelField(rect, "Contents", EditorStyles.boldLabel);
-            };
-            content.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-            {
-                var element = content.serializedProperty.GetArrayElementAtIndex(index);
-                EditorGUI.ObjectField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, GUIContent.none);
+                drawHeaderCallback = rect =>
+                {
+                    EditorGUI.LabelField(rect, "Contents", EditorStyles.boldLabel);
+                },
+                drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+                {
+                    SerializedProperty element = content.serializedProperty.GetArrayElementAtIndex(index);
+                    EditorGUI.ObjectField(new Rect(rect.x, rect.y + 2, rect.width, EditorGUIUtility.singleLineHeight), element, GUIContent.none);
+                },
+                onChangedCallback = content =>
+                {
+                    page.LineUp();
+                },
             };
         }
 
@@ -53,10 +59,10 @@ namespace ifelse.Frames
         {
             serializedObject.Update();
 
+            EditorGUI.BeginChangeCheck();
+
             direction.enumValueIndex = (int)(PageDirection)EditorGUILayout.EnumPopup("Direction", (PageDirection)direction.enumValueIndex);
-
             alignment.enumValueIndex = (int)(PageAlignment)EditorGUILayout.EnumPopup("Alignment", (PageAlignment)alignment.enumValueIndex);
-
             transition.enumValueIndex = (int)(PageTransition)EditorGUILayout.EnumPopup("Transition", (PageTransition)transition.enumValueIndex);
 
             EditorGUILayout.Space();
@@ -77,10 +83,6 @@ namespace ifelse.Frames
                 {
                     targetIndex.intValue--;
                 }
-                else
-                {
-                    Debug.LogWarning("Page index was too small to decrease");
-                }
             }
             if (GUILayout.Button("+"))
             {
@@ -88,14 +90,10 @@ namespace ifelse.Frames
                 {
                     targetIndex.intValue++;
                 }
-                else
-                {
-                    Debug.LogWarning("Page index was too large to increase");
-                }
             }
             EditorGUILayout.EndHorizontal();
 
-            timeTakenDuringAnimation.floatValue = EditorGUILayout.FloatField("Animation Length", timeTakenDuringAnimation.floatValue);
+            animationDuration.floatValue = EditorGUILayout.FloatField("Animation Length", animationDuration.floatValue);
 
             EditorGUILayout.Space();
 
@@ -114,50 +112,27 @@ namespace ifelse.Frames
 
             content.DoLayoutList();
 
-            //Disgusting removal when clicking the minus button on the reorderable list
-            List<Frame> toRemove = new List<Frame>();
-            foreach (Frame rt in page.contents)
+            if (EditorGUI.EndChangeCheck())
             {
-                if (rt == null)
-                {
-                    toRemove.Add(rt);
-                }
-            }
-            foreach (Frame rt in toRemove)
-            {
-                page.contents.Remove(rt);
-            }
-
-            //Checks if the page order has changed
-            if (content != new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true))
-            {
-                if (!EditorApplication.isPlaying)
-                {
-                    page.LineUp();
-                    page.SetPage(currentIndex.intValue, targetIndex.intValue);
-                }
+                page.ChangeDirection();
+                page.ChangeTransitionType();
+                page.SetPage(currentIndex.intValue, targetIndex.intValue);
+                page.LineUp();
+                EditorUtility.SetDirty(page);
             }
 
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Force Line Up Contents"))
+            if (GUILayout.Button("Line Up Contents"))
             {
                 page.LineUp();
             }
-            if (GUILayout.Button("Force Reset Children"))
+            if (GUILayout.Button("Reset Children"))
             {
                 page.ResetChildren();
             }
             EditorGUILayout.EndHorizontal();
 
-            if (GUI.changed && !EditorApplication.isPlaying)
-            {
-                serializedObject.ApplyModifiedProperties();
-                page.ChangeDirection();
-                page.ChangeTransitionType();
-                page.LineUp();
-                page.SetPage(currentIndex.intValue, targetIndex.intValue);
-                EditorUtility.SetDirty(page);
-            }
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

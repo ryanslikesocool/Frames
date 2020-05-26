@@ -6,7 +6,7 @@ namespace ifelse.Frames
 {
     public class PageTransitionPile : IPageableTransition
     {
-        public List<Frame> contents;
+        public List<Frame> Contents { get; set; }
 
         public Vector3[] frameDelta = null;
 
@@ -14,20 +14,24 @@ namespace ifelse.Frames
 
         public PageTransitionPile(List<Frame> contents, IPageableObject pageInstance)
         {
-            this.contents = contents;
+            this.Contents = contents;
             this.PageInstance = pageInstance;
         }
 
         public Vector3[] LineUpHorizontal(Rect bounds, Vector2[] padding, float spacing)
         {
-            Vector3[] assignedPositions = new Vector3[contents.Count];
+            Vector3[] assignedPositions = new Vector3[Contents.Count];
 
-            float expoSpacing = spacing / 10f;
+            float expoSpacing = Mathf.Abs(spacing) * 0.1f;
+            float power = 2f;
 
             int j = assignedPositions.Length - 1;
             for (int i = 0; i < assignedPositions.Length; i++)
             {
-                assignedPositions[j].Set(Mathf.Pow(2, i * expoSpacing) - Mathf.Pow(2, (assignedPositions.Length - 1) * expoSpacing), 0, -(i - contents.Count + 1) * spacing * 2);
+                if (Contents[i] == null) { continue; }
+
+                float x = Mathf.Sign(spacing) * (Mathf.Pow(power, i * expoSpacing) - Mathf.Pow(power, (Contents.Count - 1) * expoSpacing));
+                assignedPositions[j].Set(x, 0, -(i - Contents.Count + 1) * Mathf.Abs(spacing) * 2);
                 j--;
             }
 
@@ -36,14 +40,18 @@ namespace ifelse.Frames
 
         public Vector3[] LineUpVertical(Rect bounds, Vector2[] padding, float spacing)
         {
-            Vector3[] assignedPositions = new Vector3[contents.Count];
+            Vector3[] assignedPositions = new Vector3[Contents.Count];
 
-            float expoSpacing = spacing / 10f;
+            float expoSpacing = Mathf.Abs(spacing) * 0.1f;
+            float power = 2f;
 
             int j = assignedPositions.Length - 1;
             for (int i = 0; i < assignedPositions.Length; i++)
             {
-                assignedPositions[j].Set(0, -Mathf.Pow(2, i * expoSpacing) + Mathf.Pow(2, (assignedPositions.Length - 1) * expoSpacing), -(i - contents.Count + 1) * spacing * 2);
+                if (Contents[i] == null) { continue; }
+
+                float y = Mathf.Sign(spacing) * (Mathf.Pow(power, i * expoSpacing) - Mathf.Pow(power, (Contents.Count - 1) * expoSpacing));
+                assignedPositions[j].Set(0, y, -(i - Contents.Count + 1) * Mathf.Abs(spacing) * 2);
                 j--;
             }
 
@@ -52,31 +60,34 @@ namespace ifelse.Frames
 
         public void ChangePageHorizontal(int initial, int target, float time, float duration, float spacing)
         {
-            Vector3[] initialPositions = new Vector3[contents.Count];
-            for (int i = 0; i < contents.Count; i++)
+            Vector3[] initialPositions = new Vector3[Contents.Count];
+            for (int i = 0; i < Contents.Count; i++)
             {
-                initialPositions[i] = contents[i].transform.localPosition;
+                initialPositions[i] = Contents[i].transform.localPosition;
             }
 
-            frameDelta = new Vector3[contents.Count];
+            float expoSpacing = Mathf.Abs(spacing) * 0.1f;
+            float power = 2f;
+
+            frameDelta = new Vector3[Contents.Count];
 
             float clampedTime = Mathf.Clamp(time, 0, duration);
-            float expoSpacing = spacing / 10f;
-            int j = contents.Count - 1;
-            for (int i = 0; i < contents.Count; i++)
+            int j = Contents.Count - 1;
+            for (int i = 0; i < Contents.Count; i++)
             {
-                frameDelta[j] = new Vector3(Mathf.Pow(2, (i + target) * expoSpacing) - Mathf.Pow(2, (contents.Count - 1) * expoSpacing), 0, -((i + target) - contents.Count + 1) * spacing * 2) - initialPositions[j];
+                float x = Mathf.Sign(spacing) * (Mathf.Pow(power, (i + target) * expoSpacing) - Mathf.Pow(power, (Contents.Count - 1) * expoSpacing));
+                frameDelta[j] = new Vector3(x, 0, -((i + target) - Contents.Count + 1) * Mathf.Abs(spacing) * 2) - initialPositions[j];
 
-                contents[j].LocalPosition = Easings.Linear(clampedTime, initialPositions[j], frameDelta[j], duration);
+                Contents[j].LocalPosition = Easings.Linear(clampedTime, initialPositions[j], frameDelta[j], duration);
 
                 //Needed so the top-most frame doesn't go behind the second-to-top frame (very strange...)
-                if (contents[j].LocalPosition.z < spacing)
+                if (Contents[j].LocalPosition.z < spacing)
                 {
-                    contents[j].GetComponent<MeshRenderer>().sortingOrder = 1;
+                    Contents[j].GetComponent<MeshRenderer>().sortingOrder = 1;
                 }
                 else
                 {
-                    contents[j].GetComponent<MeshRenderer>().sortingOrder = 0;
+                    Contents[j].GetComponent<MeshRenderer>().sortingOrder = 0;
                 }
 
                 j--;
@@ -84,7 +95,7 @@ namespace ifelse.Frames
 
             if (time == duration)
             {
-                for (int i = 0; i < contents.Count; i++)
+                for (int i = 0; i < Contents.Count; i++)
                 {
                     PageInstance.SetAssignedPositions();
                 }
@@ -93,31 +104,34 @@ namespace ifelse.Frames
 
         public void ChangePageVertical(int initial, int target, float time, float duration, float spacing)
         {
-            Vector3[] initialPositions = new Vector3[contents.Count];
-            for (int i = 0; i < contents.Count; i++)
+            Vector3[] initialPositions = new Vector3[Contents.Count];
+            for (int i = 0; i < Contents.Count; i++)
             {
-                initialPositions[i] = contents[i].transform.localPosition;
+                initialPositions[i] = Contents[i].transform.localPosition;
             }
 
-            frameDelta = new Vector3[contents.Count];
+            float expoSpacing = Mathf.Abs(spacing) * 0.1f;
+            float power = 2f;
+
+            frameDelta = new Vector3[Contents.Count];
 
             float clampedTime = Mathf.Clamp(time, 0, duration);
-            float expoSpacing = spacing / 10f;
-            int j = contents.Count - 1;
-            for (int i = 0; i < contents.Count; i++)
+            int j = Contents.Count - 1;
+            for (int i = 0; i < Contents.Count; i++)
             {
-                frameDelta[j] = new Vector3(0, -Mathf.Pow(2, (i + target) * expoSpacing) + Mathf.Pow(2, (contents.Count - 1) * expoSpacing), -((i + target) - contents.Count + 1) * spacing * 2) - initialPositions[j];
+                float y = Mathf.Sign(spacing) * (Mathf.Pow(power, (i + target) * expoSpacing) - Mathf.Pow(power, (Contents.Count - 1) * expoSpacing));
+                frameDelta[j] = new Vector3(0, y, -((i + target) - Contents.Count + 1) * Mathf.Abs(spacing) * 2) - initialPositions[j];
 
-                contents[j].LocalPosition = Easings.Linear(clampedTime, initialPositions[j], frameDelta[j], duration);
+                Contents[j].LocalPosition = Easings.Linear(clampedTime, initialPositions[j], frameDelta[j], duration);
 
                 //Needed so the top-most frame doesn't go behind the second-to-top frame (very strange...)
-                if (contents[j].LocalPosition.z < spacing)
+                if (Contents[j].LocalPosition.z < spacing)
                 {
-                    contents[j].GetComponent<MeshRenderer>().sortingOrder = 1;
+                    Contents[j].GetComponent<MeshRenderer>().sortingOrder = 1;
                 }
                 else
                 {
-                    contents[j].GetComponent<MeshRenderer>().sortingOrder = 0;
+                    Contents[j].GetComponent<MeshRenderer>().sortingOrder = 0;
                 }
 
                 j--;
@@ -125,7 +139,7 @@ namespace ifelse.Frames
 
             if (time == duration)
             {
-                for (int i = 0; i < contents.Count; i++)
+                for (int i = 0; i < Contents.Count; i++)
                 {
                     PageInstance.SetAssignedPositions();
                 }

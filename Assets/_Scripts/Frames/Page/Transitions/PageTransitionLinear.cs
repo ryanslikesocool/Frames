@@ -6,7 +6,7 @@ namespace ifelse.Frames
 {
     public class PageTransitionLinear : IPageableTransition
     {
-        public List<Frame> contents;
+        public List<Frame> Contents { get; set; }
 
         public Vector2[] frameDelta = null;
 
@@ -14,20 +14,22 @@ namespace ifelse.Frames
 
         public PageTransitionLinear(List<Frame> contents, IPageableObject pageInstance)
         {
-            this.contents = contents;
+            this.Contents = contents;
             this.PageInstance = pageInstance;
         }
 
         public Vector3[] LineUpHorizontal(Rect bounds, Vector2[] padding, float spacing)
         {
-            Vector3[] assignedPositions = new Vector3[contents.Count];
+            Vector3[] assignedPositions = new Vector3[Contents.Count];
 
-            float spaceUsed = -bounds.width / 2f + padding[0].x;
-            for (int i = 0; i < contents.Count; i++)
+            float spaceUsed = -bounds.width * 0.5f + padding[0].x;
+            for (int i = 0; i < Contents.Count; i++)
             {
-                assignedPositions[i].x = spaceUsed + contents[i].RectTransform.rect.width / 2f;
+                if (Contents[i] == null) { continue; }
 
-                spaceUsed += spacing + contents[i].Rect.width;
+                assignedPositions[i].x = spaceUsed + Contents[i].RectTransform.rect.width * 0.5f;
+
+                spaceUsed += spacing + Contents[i].Rect.width;
             }
 
             return assignedPositions;
@@ -35,14 +37,16 @@ namespace ifelse.Frames
 
         public Vector3[] LineUpVertical(Rect bounds, Vector2[] padding, float spacing)
         {
-            Vector3[] assignedPositions = new Vector3[contents.Count];
+            Vector3[] assignedPositions = new Vector3[Contents.Count];
 
-            float spaceUsed = bounds.height / 2f - padding[1].y;
-            for (int i = 0; i < contents.Count; i++)
+            float spaceUsed = bounds.height * 0.5f - padding[1].y;
+            for (int i = 0; i < Contents.Count; i++)
             {
-                assignedPositions[i].y = spaceUsed - contents[i].Rect.height / 2f;
+                if (Contents[i] == null) { continue; }
 
-                spaceUsed -= spacing + contents[i].Rect.height;
+                assignedPositions[i].y = spaceUsed - Contents[i].Rect.height * 0.5f;
+
+                spaceUsed -= spacing + Contents[i].Rect.height;
             }
 
             return assignedPositions;
@@ -50,26 +54,26 @@ namespace ifelse.Frames
 
         public void ChangePageHorizontal(int initial, int target, float time, float duration, float spacing)
         {
-            Vector2[] initialPositions = new Vector2[contents.Count];
-            for (int i = 0; i < contents.Count; i++)
+            if (Contents.Contains(null)) { return; }
+            Vector2[] initialPositions = new Vector2[Contents.Count];
+            for (int i = 0; i < Contents.Count; i++)
             {
-                initialPositions[i].Set(contents[i].transform.localPosition.x, contents[i].transform.localPosition.y);
+                initialPositions[i].Set(Contents[i].transform.localPosition.x, Contents[i].transform.localPosition.y);
             }
 
-            frameDelta = new Vector2[contents.Count];
+            frameDelta = new Vector2[Contents.Count];
 
             float clampedTime = Mathf.Clamp(time, 0, duration);
-            float deltaX = -contents[target].LocalPosition.x;
-            for (int i = 0; i < contents.Count; i++)
+            float deltaX = -Contents[target].LocalPosition.x;
+            for (int i = 0; i < Contents.Count; i++)
             {
                 frameDelta[i].Set(deltaX, 0);
-
-                contents[i].LocalPosition = Easings.Linear(clampedTime, initialPositions[i], frameDelta[i], duration);
+                Contents[i].LocalPosition = Easings.Linear(clampedTime, initialPositions[i], frameDelta[i], duration);
             }
 
             if (time == duration)
             {
-                for (int i = 0; i < contents.Count; i++)
+                for (int i = 0; i < Contents.Count; i++)
                 {
                     PageInstance.SetAssignedPositions();
                 }
@@ -78,26 +82,26 @@ namespace ifelse.Frames
 
         public void ChangePageVertical(int initial, int target, float time, float duration, float spacing)
         {
-            Vector2[] initialPositions = new Vector2[contents.Count];
-            for (int i = 0; i < contents.Count; i++)
+            Vector2[] initialPositions = new Vector2[Contents.Count];
+            for (int i = 0; i < Contents.Count; i++)
             {
-                initialPositions[i].Set(contents[i].transform.localPosition.x, contents[i].transform.localPosition.y);
+                initialPositions[i].Set(Contents[i].transform.localPosition.x, Contents[i].transform.localPosition.y);
             }
 
-            frameDelta = new Vector2[contents.Count];
+            frameDelta = new Vector2[Contents.Count];
 
             float clampedTime = Mathf.Clamp(time, 0, duration);
-            float deltaY = -contents[target].LocalPosition.y;
-            for (int i = 0; i < contents.Count; i++)
+            float deltaY = -Contents[target].LocalPosition.y;
+            for (int i = 0; i < Contents.Count; i++)
             {
                 frameDelta[i].Set(0, deltaY);
 
-                contents[i].LocalPosition = Easings.Linear(clampedTime, initialPositions[i], frameDelta[i], duration);
+                Contents[i].LocalPosition = Easings.Linear(clampedTime, initialPositions[i], frameDelta[i], duration);
             }
 
             if (time == duration)
             {
-                for (int i = 0; i < contents.Count; i++)
+                for (int i = 0; i < Contents.Count; i++)
                 {
                     PageInstance.SetAssignedPositions();
                 }

@@ -72,7 +72,6 @@ MonoBehaviour:
   m_Name: URP Forward Renderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: -4540194157580088237}
   - {fileID: -4611540331476668633}
   m_RendererFeatureMap: 272ff262808400c0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

@@ -55,6 +55,8 @@ namespace ifelse.Frames
         {
             serializedObject.Update();
 
+            EditorGUI.BeginChangeCheck();
+
             frameColor.colorValue = EditorGUILayout.ColorField("Frame Color", frameColor.colorValue);
 
             EditorGUILayout.Space();
@@ -116,16 +118,16 @@ namespace ifelse.Frames
 
             EditorGUILayout.Space();
 
-            if (GUILayout.Button("Force Create Frame"))
-            {
-                frame.CreateFrame();
-            }
-
-            if (GUI.changed && !EditorApplication.isPlaying)
+            if (EditorGUI.EndChangeCheck())
             {
                 serializedObject.ApplyModifiedProperties();
                 frame.CreateFrame();
                 EditorUtility.SetDirty(frame);
+            }
+
+            if (GUILayout.Button("Create Frame"))
+            {
+                frame.CreateFrame();
             }
         }
     }

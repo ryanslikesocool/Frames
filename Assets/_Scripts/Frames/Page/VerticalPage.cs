@@ -40,7 +40,7 @@ namespace ifelse.Frames
         {
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedPositions[i].x = -Bounds.width / 2f + Contents[i].Rect.width / 2f + padding[0].x;
+                assignedPositions[i].x = -Bounds.width * 0.5f + Contents[i].Rect.width * 0.5f + padding[0].x;
             }
         }
 
@@ -48,7 +48,7 @@ namespace ifelse.Frames
         {
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedPositions[i].x = Bounds.height / 2f - Contents[i].Rect.width / 2f + padding[1].x;
+                assignedPositions[i].x = Bounds.height * 0.5f - Contents[i].Rect.width * 0.5f + padding[1].x;
             }
         }
 

@@ -19,7 +19,7 @@ namespace ifelse.Frames
                          assignedPositions = null;
         public int currentIndex = 0,
                    targetIndex = 0;
-        public float timeTakenDuringAnimation = 0.375f,
+        public float animationDuration = 0.375f,
                      animationTimeElapsed = 0;
 
         public IPageableObject pageInstance;
@@ -40,11 +40,11 @@ namespace ifelse.Frames
             if (currentIndex != targetIndex && Application.isPlaying)
             {
                 animationTimeElapsed += Time.deltaTime;
-                ChangePage(targetIndex, animationTimeElapsed, timeTakenDuringAnimation);
+                ChangePage(targetIndex, animationTimeElapsed, animationDuration);
             }
         }
 
-        //Resets and gathers children on top level
+        //Reset and gather children at top level
         public void ResetChildren()
         {
             contents.Clear();
@@ -73,6 +73,8 @@ namespace ifelse.Frames
 
         public void LineUp()
         {
+            if (contents.Count == 0) { return; }
+
             pageInstance.LineUp(spacing);
         }
 
@@ -109,6 +111,8 @@ namespace ifelse.Frames
 
         public void SetPage(int initial, int target)
         {
+            if (contents.Count == 0) { return; }
+
             if (target < 0 && target < contents.Count)
             {
                 currentIndex = 0;

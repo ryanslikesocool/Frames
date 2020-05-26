@@ -6,6 +6,7 @@ namespace ifelse.Frames
 {
     public interface IPageableTransition
     {
+        List<Frame> Contents { get; set; }
         IPageableObject PageInstance { get; set; }
 
         ///<summary>

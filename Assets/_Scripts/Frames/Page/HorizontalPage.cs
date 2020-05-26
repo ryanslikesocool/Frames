@@ -40,7 +40,7 @@ namespace ifelse.Frames
         {
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedPositions[i].y = -Bounds.height / 2f + Contents[i].Rect.height / 2f + padding[0].y;
+                assignedPositions[i].y = -Bounds.height * 0.5f + Contents[i].Rect.height * 0.5f + padding[0].y;
             }
         }
 
@@ -48,7 +48,7 @@ namespace ifelse.Frames
         {
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedPositions[i].y = Bounds.height / 2f - Contents[i].Rect.height / 2f + padding[1].y;
+                assignedPositions[i].y = Bounds.height * 0.5f - Contents[i].Rect.height * 0.5f + padding[1].y;
             }
         }
 
@@ -56,6 +56,7 @@ namespace ifelse.Frames
 
         public void SetAssignedPositions()
         {
+            if (Contents.Contains(null)) { return; }
             assignedPositions = new Vector3[Contents.Count];
             for (int i = 0; i < Contents.Count; i++)
             {

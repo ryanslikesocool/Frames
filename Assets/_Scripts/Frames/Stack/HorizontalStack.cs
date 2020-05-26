@@ -39,10 +39,10 @@ namespace ifelse.Frames
         {
             assignedSpacing = new Vector2[Contents.Count];
 
-            float spaceUsed = -Bounds.width / 2f + padding[0].x;
+            float spaceUsed = -Bounds.width * 0.5f + padding[0].x;
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width / 2f;
+                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width * 0.5f;
 
                 spaceUsed += inputSpacing + Contents[i].rect.width;
             }
@@ -59,12 +59,12 @@ namespace ifelse.Frames
                 contentSpace += Contents[i].rect.width;
             }
 
-            float startSpacing = Bounds.width / 2f - (contentSpace / 2f + inputSpacing * (Contents.Count - 1) / 2f);
+            float startSpacing = Bounds.width * 0.5f - (contentSpace * 0.5f + inputSpacing * (Contents.Count - 1) * 0.5f);
 
-            float spaceUsed = -Bounds.width / 2f + startSpacing;
+            float spaceUsed = -Bounds.width * 0.5f + startSpacing;
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width / 2f;
+                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width * 0.5f;
 
                 spaceUsed += inputSpacing + Contents[i].rect.width;
             }
@@ -83,10 +83,10 @@ namespace ifelse.Frames
 
             float startSpacing = Bounds.width - (contentSpace + inputSpacing * (Contents.Count - 1));
 
-            float spaceUsed = -Bounds.width / 2f + startSpacing + padding[1].x;
+            float spaceUsed = -Bounds.width * 0.5f + startSpacing + padding[1].x;
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width / 2f;
+                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width * 0.5f;
 
                 spaceUsed += inputSpacing + Contents[i].rect.width;
             }
@@ -103,12 +103,12 @@ namespace ifelse.Frames
                 contentSpace += Contents[i].rect.width;
             }
 
-            float autoSpacing = (Bounds.width - contentSpace) / (Contents.Count - 1) - (padding[0].x + padding[1].x) / 2f;
+            float autoSpacing = (Bounds.width - contentSpace) / (Contents.Count - 1) - (padding[0].x + padding[1].x) * 0.5f;
 
-            float spaceUsed = -Bounds.width / 2f + padding[0].x;
+            float spaceUsed = -Bounds.width * 0.5f + padding[0].x;
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width / 2f;
+                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width * 0.5f;
 
                 spaceUsed += autoSpacing + Contents[i].rect.width;
             }
@@ -127,10 +127,10 @@ namespace ifelse.Frames
 
             float autoSpacing = (Bounds.width - contentSpace) / 2;
 
-            float spaceUsed = -Bounds.width / 2f + autoSpacing;
+            float spaceUsed = -Bounds.width * 0.5f + autoSpacing;
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width / 2f;
+                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width * 0.5f;
 
                 spaceUsed += Contents[i].rect.width;
             }
@@ -144,15 +144,19 @@ namespace ifelse.Frames
             float contentSpace = 0;
             for (int i = 0; i < Contents.Count; i++)
             {
+                if (Contents[i] == null) { continue; }
+
                 contentSpace += Contents[i].rect.width;
             }
 
             float autoSpacing = (Bounds.width - contentSpace) / (Contents.Count + 1);
 
-            float spaceUsed = -Bounds.width / 2f + autoSpacing;
+            float spaceUsed = -Bounds.width * 0.5f + autoSpacing;
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width / 2f;
+                if (Contents[i] == null) { continue; }
+
+                assignedSpacing[i].x = spaceUsed + Contents[i].rect.width * 0.5f;
 
                 spaceUsed += autoSpacing + Contents[i].rect.width;
             }
@@ -167,7 +171,7 @@ namespace ifelse.Frames
         {
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].y = -Bounds.height / 2f + Contents[i].rect.height / 2f + padding[0].y;
+                assignedSpacing[i].y = -Bounds.height * 0.5f + Contents[i].rect.height * 0.5f + padding[0].y;
             }
         }
 
@@ -176,7 +180,7 @@ namespace ifelse.Frames
         {
             for (int i = 0; i < Contents.Count; i++)
             {
-                assignedSpacing[i].y = Bounds.height / 2f - Contents[i].rect.height / 2f + padding[1].y;
+                assignedSpacing[i].y = Bounds.height * 0.5f - Contents[i].rect.height * 0.5f + padding[1].y;
             }
         }
 

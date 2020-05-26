@@ -23,7 +23,6 @@ namespace ifelse.Frames
 
         private ReorderableList content;
 
-        //Just your basic custom inspector enable stuff
         public void OnEnable()
         {
             stack = (Stack)target;
@@ -34,23 +33,29 @@ namespace ifelse.Frames
             padding = serializedObject.FindProperty("padding");
             spacing = serializedObject.FindProperty("spacing");
 
-            content = new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true);
-            content.drawHeaderCallback = rect =>
+            content = new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true)
             {
-                EditorGUI.LabelField(rect, "Contents", EditorStyles.boldLabel);
-            };
-            content.drawElementCallback =
-                (Rect rect, int index, bool isActive, bool isFocused) =>
+                drawHeaderCallback = rect =>
                 {
-                    var element = content.serializedProperty.GetArrayElementAtIndex(index);
+                    EditorGUI.LabelField(rect, "Contents", EditorStyles.boldLabel);
+                },
+                drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+                {
+                    SerializedProperty element = content.serializedProperty.GetArrayElementAtIndex(index);
                     EditorGUI.ObjectField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, GUIContent.none);
-                };
+                },
+                onChangedCallback = content =>
+                {
+                    stack.ForceStack();
+                }
+            };
         }
-
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+
+            EditorGUI.BeginChangeCheck();
 
             direction.enumValueIndex = (int)(StackDirection)EditorGUILayout.EnumPopup("Direction", (StackDirection)direction.enumValueIndex);
 
@@ -81,45 +86,16 @@ namespace ifelse.Frames
 
             content.DoLayoutList();
 
-            //For some reason, the minus button on the reorderable list in the editor
-            //doens't remove the entry in the list.  This fixes that
-            List<RectTransform> toRemove = new List<RectTransform>();
-            foreach (RectTransform rt in stack.contents)
-            {
-                if (rt == null)
-                {
-                    toRemove.Add(rt);
-                }
-            }
-            foreach (RectTransform rt in toRemove)
-            {
-                stack.contents.Remove(rt);
-            }
-
-            //Checks if the stack order has changed
-            if (content != new ReorderableList(serializedObject, serializedObject.FindProperty("contents"), true, true, true, true))
-            {
-                if (stack.direction == StackDirection.Horizontal)
-                {
-                    stack.stackInstance = new HorizontalStack(stack.rectTransform, stack.contents, stack.distribution, stack.alignment, stack.spacing, stack.padding);
-                }
-                else
-                {
-                    stack.stackInstance = new VerticalStack(stack.rectTransform, stack.contents, stack.distribution, stack.alignment, stack.spacing, stack.padding);
-                }
-                stack.ForceStack();
-            }
-
-            if (GUI.changed && !EditorApplication.isPlaying)
+            if (EditorGUI.EndChangeCheck())
             {
                 serializedObject.ApplyModifiedProperties();
-                stack.ForceStack();
                 EditorUtility.SetDirty(stack);
+                stack.ForceStack();
             }
 
             //Fixes stuff when stuff goes wrong.  Shouldn't need to be used *too* often (hopefully)
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Force Restack"))
+            if (GUILayout.Button("Restack"))
             {
                 if ((StackDirection)direction.enumValueIndex == StackDirection.Horizontal)
                 {
@@ -131,7 +107,7 @@ namespace ifelse.Frames
                 }
                 stack.ForceStack();
             }
-            if (GUILayout.Button("Force Reset Children"))
+            if (GUILayout.Button("Reset Children"))
             {
                 stack.ResetChildren();
             }
