@@ -1,7 +1,7 @@
 ![Stack Demo](https://raw.githubusercontent.com/ryanslikesocool/Unity-UI-Layout/master/images/StackPreview.png)
 
-# Unity-UI-Layout
-A set of Framer X-esque elements and tools for Unity 2020.1+.  
+# Frames
+A set of Framer-esque UI elements and tools for Unity 2020.1+.  
 
 ## Frame
 Frames are containers
