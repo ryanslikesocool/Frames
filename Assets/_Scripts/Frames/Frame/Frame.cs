@@ -56,17 +56,20 @@ namespace ifelse.Frames
 
         public void CreateFrame()
         {
-            switch (cornerType)
+            if (FrameInstance == null || FrameInstance.CornerType != cornerType)
             {
-                case FrameCornerType.Round:
-                    FrameInstance = new RoundFrame(RectTransform, cornerRadii, levelOfDetail);
-                    break;
-                case FrameCornerType.Smooth:
-                    FrameInstance = new SmoothFrame(RectTransform, cornerRadii, levelOfDetail);
-                    break;
+                switch (cornerType)
+                {
+                    case FrameCornerType.Round:
+                        FrameInstance = new RoundFrame(RectTransform, cornerRadii, levelOfDetail);
+                        break;
+                    case FrameCornerType.Smooth:
+                        FrameInstance = new SmoothFrame(RectTransform, cornerRadii, levelOfDetail);
+                        break;
+                }
             }
 
-            MeshFilter.sharedMesh = FrameInstance.CreateMesh();
+            FrameInstance.CreateMesh(MeshFilter.sharedMesh);
             UpdateFrameColor(MeshFilter.sharedMesh);
             UpdateSortingOrder();
         }

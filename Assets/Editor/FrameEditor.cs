@@ -37,20 +37,6 @@ namespace ifelse.Frames
             sortingOrderOverride = serializedObject.FindProperty("sortingOrderOverride");
         }
 
-        void OnSceneGUI()
-        {
-            //Drag and drop stuff
-            if (Event.current.type == EventType.MouseUp)
-            {
-                if (frame.GetComponentInParent<Stack>() != null)
-                {
-                    Stack stack = frame.GetComponentInParent<Stack>();
-                    stack.SortStack();
-                    stack.ForceStack();
-                }
-            }
-        }
-
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -63,8 +49,6 @@ namespace ifelse.Frames
 
             cornerType.enumValueIndex = (int)(FrameCornerType)EditorGUILayout.EnumPopup("Corner Type", (FrameCornerType)cornerType.enumValueIndex);
 
-            EditorGUILayout.Space();
-
             //This toggle allows for easy uniform corner radii
             if (splitCorners.boolValue = EditorGUILayout.Toggle("Split Corners", splitCorners.boolValue))
             {
@@ -75,6 +59,7 @@ namespace ifelse.Frames
                 {
                     cornerRadii.arraySize = 4;
                 }
+                EditorGUILayout.BeginHorizontal();
                 cornerRadii.GetArrayElementAtIndex(0).floatValue = EditorGUILayout.Slider("Top Right", cornerRadii.GetArrayElementAtIndex(0).floatValue, 0, Mathf.Min(
                                                                                                         frame.RectTransform.rect.width - cornerRadii.GetArrayElementAtIndex(1).floatValue,
                                                                                                         frame.RectTransform.rect.height - cornerRadii.GetArrayElementAtIndex(3).floatValue)
@@ -83,6 +68,8 @@ namespace ifelse.Frames
                                                                                                         frame.RectTransform.rect.width - cornerRadii.GetArrayElementAtIndex(2).floatValue,
                                                                                                         frame.RectTransform.rect.height - cornerRadii.GetArrayElementAtIndex(0).floatValue)
                                                                                                     );
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
                 cornerRadii.GetArrayElementAtIndex(2).floatValue = EditorGUILayout.Slider("Bottom Left", cornerRadii.GetArrayElementAtIndex(2).floatValue, 0, Mathf.Min(
                                                                                                         frame.RectTransform.rect.width - cornerRadii.GetArrayElementAtIndex(3).floatValue,
                                                                                                         frame.RectTransform.rect.height - cornerRadii.GetArrayElementAtIndex(1).floatValue)
@@ -91,12 +78,13 @@ namespace ifelse.Frames
                                                                                                         frame.RectTransform.rect.width - cornerRadii.GetArrayElementAtIndex(2).floatValue,
                                                                                                         frame.RectTransform.rect.height - cornerRadii.GetArrayElementAtIndex(0).floatValue)
                                                                                                     );
+                EditorGUILayout.EndHorizontal();
             }
             else
             {
                 cornerRadii.GetArrayElementAtIndex(0).floatValue = EditorGUILayout.Slider("Uniform Corner Radius", cornerRadii.GetArrayElementAtIndex(0).floatValue, 0, Mathf.Min(
-                                                                                                                    frame.RectTransform.rect.width / 2,
-                                                                                                                    frame.RectTransform.rect.height / 2)
+                                                                                                                    frame.RectTransform.rect.width * 0.5f,
+                                                                                                                    frame.RectTransform.rect.height * 0.5f)
                                                                                                                 );
 
                 for (int i = 1; i < 4; i++)
@@ -105,7 +93,7 @@ namespace ifelse.Frames
                 }
             }
 
-            //You can probably increase it, but 32 should be a high enough max for it to still look good.  Even 4 looks good if the frame is small enough
+            //You can increase this, but 32 should be a high enough max for it to still look good.  Even 4 looks good if the frame is small enough
             levelOfDetail.intValue = EditorGUILayout.IntSlider("Vertices Per Corner", levelOfDetail.intValue, 4, 32);
 
             EditorGUILayout.Space();
@@ -118,7 +106,7 @@ namespace ifelse.Frames
 
             EditorGUILayout.Space();
 
-            if (EditorGUI.EndChangeCheck())
+            if (EditorGUI.EndChangeCheck() || frame.RectTransform.hasChanged)
             {
                 serializedObject.ApplyModifiedProperties();
                 frame.CreateFrame();

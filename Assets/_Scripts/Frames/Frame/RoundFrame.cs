@@ -10,10 +10,15 @@ namespace ifelse.Frames
         public RectTransform RectTransform { get; set; }
         public Rect Bounds { get; set; }
 
+        public FrameCornerType CornerType { get { return FrameCornerType.Round; } }
+        public Triangulator Triangulator { get; }
+
         public float[] cornerRadii;
         public int levelOfDetail;
 
         public List<Vector2> meshPoints = new List<Vector2>();
+        public List<int> meshIndices = new List<int>();
+        public List<Vector2> meshUVs = new List<Vector2>();
 
         //Frame corners are created similar to progressing along a unit circle.
         public RoundFrame(RectTransform rectTransform, float[] cornerRadii, int levelOfDetail)
@@ -22,26 +27,28 @@ namespace ifelse.Frames
             this.Bounds = rectTransform.rect;
             this.cornerRadii = cornerRadii;
             this.levelOfDetail = levelOfDetail;
+
+            Triangulator = new Triangulator();
         }
 
         private void GetCornerPoints(int cornerNumber, float radius, int levelOfDetail)
         {
-            Vector2[] returnPoints = new Vector2[levelOfDetail];
-
             Vector2 offset = Vector2.zero;
+            Vector2 size = new Vector2(Bounds.width, Bounds.height);
+            Vector2 extents = size * 0.5f;
             switch (cornerNumber)
             {
                 case 0:
-                    offset.Set(Bounds.width / 2 - radius, Bounds.height / 2 - radius);
+                    offset.Set(Bounds.width * 0.5f - radius, Bounds.height * 0.5f - radius);
                     break;
                 case 1:
-                    offset.Set(-Bounds.width / 2 + radius, Bounds.height / 2 - radius);
+                    offset.Set(-Bounds.width * 0.5f + radius, Bounds.height * 0.5f - radius);
                     break;
                 case 2:
-                    offset.Set(-Bounds.width / 2 + radius, -Bounds.height / 2 + radius);
+                    offset.Set(-Bounds.width * 0.5f + radius, -Bounds.height * 0.5f + radius);
                     break;
                 case 3:
-                    offset.Set(Bounds.width / 2 - radius, -Bounds.height / 2 + radius);
+                    offset.Set(Bounds.width * 0.5f - radius, -Bounds.height * 0.5f + radius);
                     break;
             }
 
@@ -50,9 +57,10 @@ namespace ifelse.Frames
             {
                 for (int i = 0; i < levelOfDetail; i++)
                 {
-                    float angle = i * Mathf.PI / 2 / levelOfDetail + cornerNumber * Mathf.PI / 2;
+                    float angle = i * Mathf.PI * 0.5f / levelOfDetail + cornerNumber * Mathf.PI * 0.5f;
                     Vector2 point = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius + offset;
                     meshPoints.Add(point);
+                    meshUVs.Add((point - extents) / size);
                 }
 
                 Vector2 extraPoint = Vector2.zero;
@@ -74,44 +82,51 @@ namespace ifelse.Frames
                 if (!meshPoints.Contains(extraPoint))
                 {
                     meshPoints.Add(extraPoint);
+                    meshUVs.Add((extraPoint - extents) / size);
                 }
             }
             else
             {
                 meshPoints.Add(offset);
+                meshUVs.Add((offset - extents) / size);
             }
         }
 
-        public Mesh CreateMesh()
+        public void CreateMesh(Mesh mesh)
         {
             meshPoints.Clear();
+            meshIndices.Clear();
+            meshUVs.Clear();
 
             for (int i = 0; i < 4; i++)
             {
                 GetCornerPoints(i, cornerRadii[i], levelOfDetail);
             }
 
-            Vector2[] vertices2D = meshPoints.ToArray();
-
             //Use Triangulator to get indices for creating triangles
-            Triangulator tr = new Triangulator(vertices2D);
-            int[] indices = tr.Triangulate();
+            Triangulator.SetPoints(meshPoints);
+            int[] indices = Triangulator.Triangulate();
 
-            Vector3[] vertices = new Vector3[vertices2D.Length];
+            Vector3[] vertices = new Vector3[meshPoints.Count];
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
+                vertices[i] = new Vector3(meshPoints[i].x, meshPoints[i].y, 0);
             }
 
             //Create the mesh
-            Mesh mesh = new Mesh();
-            mesh.vertices = vertices;
-            mesh.triangles = indices;
+            if (mesh == null)
+            {
+                mesh = new Mesh();
+            }
+            mesh.Clear();
+            mesh.name = $"Frame {GetHashCode()} - Round";
+            mesh.SetVertices(vertices);
+            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+            mesh.SetUVs(0, meshUVs);
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-
-            //Set up game object with mesh
-            return mesh;
+            mesh.RecalculateTangents();
+            mesh.Optimize();
         }
     }
 }

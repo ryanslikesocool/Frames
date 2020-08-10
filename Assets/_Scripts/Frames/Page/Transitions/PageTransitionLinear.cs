@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace ifelse.Frames
 {
+    using Easings.Core;
+
     public class PageTransitionLinear : IPageableTransition
     {
         public List<Frame> Contents { get; set; }

@@ -7,8 +7,11 @@ namespace ifelse.Frames
     public interface IFrameableObject
     {
         RectTransform RectTransform { get; set; }
-        Rect Bounds { get; set; }
+        Rect Bounds { get; }
 
-        Mesh CreateMesh();
+        FrameCornerType CornerType { get; }
+        Triangulator Triangulator { get; }
+
+        void CreateMesh(Mesh mesh);
     }
 }
