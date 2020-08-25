@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace ifelse.Frames
 {
-    public class FramerMenu : MonoBehaviour
+    public class FramesMenu
     {
         //Menu for new Frame
         [MenuItem("GameObject/Frames/Frame", false, 10)]
@@ -41,9 +41,9 @@ namespace ifelse.Frames
         static void FinalizeCreation(GameObject go)
         {
             //Parent to first canvas, otherwise create one and parent if needed
-            if (FindObjectOfType<Canvas>() != null)
+            if (GameObject.FindObjectOfType<Canvas>() != null)
             {
-                go.transform.SetParent(FindObjectOfType<Canvas>().transform);
+                go.transform.SetParent(GameObject.FindObjectOfType<Canvas>().transform);
             }
             else
             {

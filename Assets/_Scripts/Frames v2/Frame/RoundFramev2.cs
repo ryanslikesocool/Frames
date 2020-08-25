@@ -60,7 +60,7 @@ namespace ifelse.Frames.v2
                 OuterVertexCount = detail,
                 CornerVertexCount = detail + 1,
                 Indices = indices
-            }.Schedule(cornerIndexCount, 32, dependency);
+            }.Schedule(cornerIndexCount, 64, dependency);
 
             dependency = new CalculateQuadIndicesJob
             {
@@ -68,7 +68,7 @@ namespace ifelse.Frames.v2
                 CornerVertexCount = detail + 1,
                 VertexCount = vertexCount,
                 Indices = indices
-            }.Schedule(4, 32, dependency);
+            }.Schedule(4, 64, dependency);
 
             dependency.Complete();
 
