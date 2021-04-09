@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ifelse.Frames
+namespace Frames
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]

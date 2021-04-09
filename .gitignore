@@ -1,18 +1,22 @@
+# macOS System Files
+*.DS_Store
+.DS_Store
+
+# Folders and contents
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
-[Pp]ackages/
-[Pp]rojectSettings/
-[Tt]emp/
+[Uu]IElementsSchema/
+[Xx]code/
 [Ll]ogs/
-Assets/AssetStoreTools*
+[Mm]emoryCaptures/
 
-# macOS System Files
-*.DS_Store
+# Folders, contents, and metadata
+Assets/EntityCache*
 
-# Visual Studio cache directory
+# Visual Studio and VS Code cache directory
 .vs/
 .vscode/
 
@@ -40,5 +44,9 @@ ExportedObj/
 sysinfo.txt
 
 # Builds
+*.app
 *.apk
 *.unitypackage
+
+# Blender autosaves
+*.blend1

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ifelse.Frames
+namespace Frames
 {
     public class RoundFrame : IFrameableObject
     {

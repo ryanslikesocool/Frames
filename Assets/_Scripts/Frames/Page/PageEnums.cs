@@ -1,4 +1,4 @@
-﻿namespace ifelse.Frames
+﻿namespace Frames
 {
     public enum PageDirection
     {

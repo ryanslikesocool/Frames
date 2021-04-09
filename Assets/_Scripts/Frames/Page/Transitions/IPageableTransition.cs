@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ifelse.Frames
+namespace Frames
 {
     public interface IPageableTransition
     {

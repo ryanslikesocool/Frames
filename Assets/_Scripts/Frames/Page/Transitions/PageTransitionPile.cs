@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Easings;
 
-namespace ifelse.Frames
+namespace Frames
 {
-    using Easings.Core;
-
     public class PageTransitionPile : IPageableTransition
     {
         public List<Frame> Contents { get; set; }
@@ -80,7 +79,7 @@ namespace ifelse.Frames
                 float x = Mathf.Sign(spacing) * (Mathf.Pow(power, (i + target) * expoSpacing) - Mathf.Pow(power, (Contents.Count - 1) * expoSpacing));
                 frameDelta[j] = new Vector3(x, 0, -((i + target) - Contents.Count + 1) * Mathf.Abs(spacing) * 2) - initialPositions[j];
 
-                Contents[j].LocalPosition = Easings.Linear(clampedTime, initialPositions[j], frameDelta[j], duration);
+                Contents[j].LocalPosition = EasingType.Linear.Ease(clampedTime, initialPositions[j], frameDelta[j], duration);
 
                 //Needed so the top-most frame doesn't go behind the second-to-top frame (very strange...)
                 if (Contents[j].LocalPosition.z < spacing)
@@ -124,7 +123,7 @@ namespace ifelse.Frames
                 float y = Mathf.Sign(spacing) * (Mathf.Pow(power, (i + target) * expoSpacing) - Mathf.Pow(power, (Contents.Count - 1) * expoSpacing));
                 frameDelta[j] = new Vector3(0, y, -((i + target) - Contents.Count + 1) * Mathf.Abs(spacing) * 2) - initialPositions[j];
 
-                Contents[j].LocalPosition = Easings.Linear(clampedTime, initialPositions[j], frameDelta[j], duration);
+                Contents[j].LocalPosition = EasingType.Linear.Ease(clampedTime, initialPositions[j], frameDelta[j], duration);
 
                 //Needed so the top-most frame doesn't go behind the second-to-top frame (very strange...)
                 if (Contents[j].LocalPosition.z < spacing)

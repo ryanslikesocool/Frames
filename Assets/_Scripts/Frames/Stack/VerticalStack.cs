@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace ifelse.Frames
+namespace Frames
 {
     public class VerticalStack : IStackableDirection
     {

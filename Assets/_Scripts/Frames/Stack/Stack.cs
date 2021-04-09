@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEditor;
 using System;
 
-namespace ifelse.Frames
+namespace Frames
 {
     [ExecuteInEditMode]
     public class Stack : MonoBehaviour

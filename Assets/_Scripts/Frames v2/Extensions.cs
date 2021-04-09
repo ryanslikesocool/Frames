@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace ifelse.Frames.v2
+namespace FramesV2
 {
     public static class Extensions
     {

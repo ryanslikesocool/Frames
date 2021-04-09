@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Burst;
 
-namespace ifelse.Frames.v2
+namespace FramesV2
 {
     public class FrameJobs
     {

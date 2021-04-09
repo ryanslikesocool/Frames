@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Easings;
 
-namespace ifelse.Frames
+namespace Frames
 {
-    using Easings.Core;
-
     public class PageTransitionLinear : IPageableTransition
     {
         public List<Frame> Contents { get; set; }
@@ -70,7 +69,7 @@ namespace ifelse.Frames
             for (int i = 0; i < Contents.Count; i++)
             {
                 frameDelta[i].Set(deltaX, 0);
-                Contents[i].LocalPosition = Easings.Linear(clampedTime, initialPositions[i], frameDelta[i], duration);
+                Contents[i].LocalPosition = EasingType.Linear.Ease(clampedTime, initialPositions[i], frameDelta[i], duration);
             }
 
             if (time == duration)
@@ -98,7 +97,7 @@ namespace ifelse.Frames
             {
                 frameDelta[i].Set(0, deltaY);
 
-                Contents[i].LocalPosition = Easings.Linear(clampedTime, initialPositions[i], frameDelta[i], duration);
+                Contents[i].LocalPosition = EasingType.Linear.Ease(clampedTime, initialPositions[i], frameDelta[i], duration);
             }
 
             if (time == duration)

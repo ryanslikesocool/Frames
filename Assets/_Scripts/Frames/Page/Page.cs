@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
-namespace ifelse.Frames
+namespace Frames
 {
     [ExecuteInEditMode]
     public class Page : MonoBehaviour

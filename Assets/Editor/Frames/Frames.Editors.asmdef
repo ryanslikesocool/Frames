@@ -1,0 +1,16 @@
+{
+    "name": "Frames.Editors",
+    "rootNamespace": "Frames.Editors",
+    "references": [
+        "GUID:893adbd35b43f4ee98b06056512a72cf"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
