@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEditor;
-using UnityEditorInternal;
-using UnityEditor.SceneManagement;
 
 namespace Frames.Editors
 {
@@ -120,3 +116,4 @@ namespace Frames.Editors
         }
     }
 }
+#endif

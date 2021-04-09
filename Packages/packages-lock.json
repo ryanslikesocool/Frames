@@ -9,6 +9,13 @@
       },
       "hash": "583c0ec58161206adecf902c0fe37c93db9b7640"
     },
+    "com.ifelse.templateutil": {
+      "version": "https://github.com/ryanslikesocool/TemplateUtil.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8193fbc0395af05b56c191e3b68ceba27e711a88"
+    },
     "com.unity.burst": {
       "version": "1.5.1",
       "depth": 0,

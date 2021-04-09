@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.ifelse.easings": "https://github.com/ryanslikesocool/Easings.git",
+    "com.ifelse.templateutil": "https://github.com/ryanslikesocool/TemplateUtil.git",
     "com.unity.burst": "1.5.1",
     "com.unity.ide.vscode": "1.2.3",
     "com.unity.inputsystem": "1.0.2",

@@ -1,0 +1,16 @@
+{
+    "name": "FramesV2.Editors",
+    "rootNamespace": "FramesV2.Editors",
+    "references": [
+        "GUID:4d27ad9455f5a4f91a5f7032ac9a692e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
